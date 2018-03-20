@@ -3,15 +3,50 @@ from browser.template import Template
 
 #browser.doc['test'].text = "hello"
 
+length_values = {
+    1: 1,
+    2: 2,
+    3: 4,
+    4: 7,
+    5: 10,
+    6: 15
+    }
+
 train_lengths = [1, 2, 3, 4, 5, 6]
 counts = {length: 0 for length in train_lengths}
+score = [0]
+
+
+def log(msg):
+    browser.doc['messages'].text = msg
+
+
+def log_event(msg, event, element):
+    log("%r target=%r data=%r element=%r" % (msg, dir(event.target), event.target.attributes['data-divnr'].value, element, ))
+
+
+def get_divnr(event):
+    return int(event.target.attributes['data-divnr'].value)
+
+
+def update_score():
+    s = 0
+    for l in train_lengths:
+        s += length_values[l] * counts[l]
+    score[0] = s
+
 
 def increase(event, element):
-    print("inc %s %s" % (event, element, ))
-    pass
+    # log_event("inc", event, element)
+    counts[get_divnr(event)] += 1
+    update_score()
+
 
 def decrease(event, element):
-    print("dec %s %s" % (event, element, ))
-    pass
+    # log_event("dec", event, element)
+    counts[get_divnr(event)] -= 1
+    update_score()
 
-Template(browser.doc['input_divs'], [increase, decrease]).render(train_lengths=train_lengths, count=counts)
+
+Template(browser.doc['input_divs'], [increase, decrease]).render(train_lengths=train_lengths, count=counts, score=score)
+

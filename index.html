@@ -8,15 +8,24 @@
 
 <div id="input_divs">
     <div b-code="for i in train_lengths:" class="length_block">
-        <div class="label">i={i}</div>
-        <div class="increase" b-on="click:increase">+</div>
-        <div class="value">{count[i]}</div>
-        <div class="decrease" b-on="click:decrease">-</div>
+        <div class="label">{i}</div>
+        <div class="increase" data-divnr="{i}" b-on="click:increase">+</div>
+        <div class="value" id="count{i}">{count[i]}</div>
+        <div class="decrease" data-divnr="{i}" b-on="click:decrease">-</div>
+    </div>
+
+    <div class="length_block">
+        <div class="label">Pt</div>
+        <div class="increase">&nbsp;</div>
+        <div class="value">{score[0]}</div>
+        <div class="decrease">&nbsp;</div>
     </div>
 </div>
 
+<div id="messages">
+</div>
 <script src="js/brython.js"></script>
 <script src="js/brython_stdlib.js"></script>
-<script type="text/python" src="index.py" id="index.py"/>
+<script type="text/python" src="index.py" id="index.py"></script>
 </body>
 </html>
