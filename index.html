@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title>Brython playground</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body onload="brython(1)">
+
+<div id="input_divs">
+    <div b-code="for i in train_lengths:" class="length_block">
+        <div class="label">i={i}</div>
+        <div class="increase" b-on="click:increase">+</div>
+        <div class="value">{count[i]}</div>
+        <div class="decrease" b-on="click:decrease">-</div>
+    </div>
+</div>
+
+<script src="js/brython.js"></script>
+<script src="js/brython_stdlib.js"></script>
+<script type="text/python" src="index.py" id="index.py"/>
+</body>
+</html>
