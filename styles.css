@@ -1,4 +1,46 @@
 
-.length_block {
-    display: inline-block
+#input_divs {
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 150px;
 }
+
+.length_block {
+    display: inline-block;
+    font-family: Helvetica, Arial;
+}
+
+.length_block DIV {
+    font-size: 24px;
+    display: block;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+}
+
+.length_block .increase IMG,
+.length_block .decrease IMG
+{
+    width: 100%
+}
+
+.score, .remaining {
+    vertical-align: top;
+}
+
+.score {
+    font-weight: bold;
+    font-size: 32px;
+}
+
+/*
+.length_block .increase {
+    content:url(images/up.png);
+}
+
+.length_block .decrease {
+    content:url(images/down.png);
+}
+*/

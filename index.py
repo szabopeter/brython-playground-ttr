@@ -12,9 +12,11 @@ length_values = {
     6: 15
     }
 
+remaining_pieces = 45
 train_lengths = [1, 2, 3, 4, 5, 6]
 counts = {length: 0 for length in train_lengths}
 score = [0]
+remaining = [remaining_pieces]
 
 
 def log(msg):
@@ -26,14 +28,17 @@ def log_event(msg, event, element):
 
 
 def get_divnr(event):
-    return int(event.target.attributes['data-divnr'].value)
+    return int(event.target.parent.attributes['data-divnr'].value)
 
 
 def update_score():
     s = 0
+    r = remaining_pieces
     for l in train_lengths:
         s += length_values[l] * counts[l]
+        r -= l * counts[l]
     score[0] = s
+    remaining[0] = r
 
 
 def increase(event, element):
@@ -48,5 +53,6 @@ def decrease(event, element):
     update_score()
 
 
-Template(browser.doc['input_divs'], [increase, decrease]).render(train_lengths=train_lengths, count=counts, score=score)
+Template(browser.doc['input_divs'], [increase, decrease]).render(
+    train_lengths=train_lengths, count=counts, score=score, remaining=remaining)
 
