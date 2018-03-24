@@ -31,6 +31,8 @@ def log_event(msg, event, element):
 def get_divnr(event):
     return int(event.target.parent.attributes['data-divnr'].value)
 
+def get_count_ctr(nr):
+    browser.doc['']
 
 def update_score():
     s = 0
@@ -57,16 +59,60 @@ def decrease(event, element):
 Template(browser.doc['input_divs'], [increase, decrease]).render(
     train_lengths=train_lengths, count=counts, score=score, remaining=remaining)
 
-#------------------------
+# ------------------------
+
 lengths = {}
 for i in (1, 2, 3, 4, 5, 6):
     lengths[i] = 0
 
-def increase_click(event):
-    lengths[get_divnr(event)] += 1
+inc_buttons = {}
+dec_buttons = {}
+length_divs = {}
+length_blocks = {}
 
-inc_buttons = browser.doc.select("#main_lengths DIV .increase")
-for inc_button in inc_buttons:
-    inc_button.addEventListener("click", increase_click)
+def mk_action(divnr):
+    def inc_action(event):
+        lengths[divnr] += 1
+        length_divs[divnr].text = lengths[divnr]
+        log("inc %s" % divnr)
+
+    def dec_action(event):
+        lengths[divnr] -= 1
+        length_divs[divnr].text = lengths[divnr]
+        log("dec %s" % divnr)
+    
+    return inc_action, dec_action
+    
+
+for length_block in browser.doc.select("#main_lengths DIV.length_block"):
+    # if 'datadivnr' not in length_block.attributes:
+    #    log("skip %s, has no datadivnr" % length_block)
+    #    continue
+    divnr_str = length_block.attributes['datadivnr']
+    if not divnr_str:
+        log("skipping %s, has no datadivnr" % length_block)
+        continue
+    divnr = int(divnr_str.value)
+
+    length_blocks[divnr] = length_block
+    inc_button = length_block.select('.increase')[0]
+    dec_button = length_block.select('.decrease')[0]
+    inc_buttons[divnr] = inc_button
+    dec_buttons[divnr] = dec_button
+    length_divs[divnr] = length_block.select('.value')[0]
+
+    def inc_action1(event):
+        lengths[divnr] += 1
+        length_block.text = lengths[divnr]
+        log("inc %s" % divnr)
+
+    def dec_action1(event):
+        lengths[divnr] -= 1
+        length_block.text = lengths[divnr]
+        log("dec %s" % divnr)
+
+    inc_action, dec_action = mk_action(divnr)
+    inc_button.bind("click", inc_action)
+    dec_button.bind("click", dec_action)
 
 
