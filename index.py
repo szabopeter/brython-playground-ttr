@@ -21,6 +21,7 @@ remaining = [remaining_pieces]
 
 def log(msg):
     browser.doc['messages'].text = msg
+    print(msg)
 
 
 def log_event(msg, event, element):
@@ -55,4 +56,17 @@ def decrease(event, element):
 
 Template(browser.doc['input_divs'], [increase, decrease]).render(
     train_lengths=train_lengths, count=counts, score=score, remaining=remaining)
+
+#------------------------
+lengths = {}
+for i in (1, 2, 3, 4, 5, 6):
+    lengths[i] = 0
+
+def increase_click(event):
+    lengths[get_divnr(event)] += 1
+
+inc_buttons = browser.doc.select("#main_lengths DIV .increase")
+for inc_button in inc_buttons:
+    inc_button.addEventListener("click", increase_click)
+
 
