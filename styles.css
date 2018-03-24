@@ -6,6 +6,10 @@
     margin-top: 150px;
 }
 
+#input_divs_wrapper {
+    display: inline-block;
+}
+
 .length_block {
     display: inline-block;
     font-family: Helvetica, Arial;

@@ -31,8 +31,6 @@ def log_event(msg, event, element):
 def get_divnr(event):
     return int(event.target.parent.attributes['data-divnr'].value)
 
-def get_count_ctr(nr):
-    browser.doc['']
 
 def update_score():
     s = 0
@@ -40,24 +38,31 @@ def update_score():
     for l in train_lengths:
         s += length_values[l] * counts[l]
         r -= l * counts[l]
-    score[0] = s
-    remaining[0] = r
+    browser.doc['out_score'].text = score[0] = s
+    browser.doc['out_remaining'].text = remaining[0] = r
+    
 
 
 def increase(event, element):
     # log_event("inc", event, element)
-    counts[get_divnr(event)] += 1
+    divnr = get_divnr(event)
+    counts[divnr] += 1
+    browser.doc['count%s' % divnr].text = counts[divnr] 
     update_score()
 
 
 def decrease(event, element):
     # log_event("dec", event, element)
-    counts[get_divnr(event)] -= 1
+    divnr = get_divnr(event)
+    counts[divnr] -= 1
+    browser.doc['count%s' % divnr].text = counts[divnr] 
     update_score()
 
 
-Template(browser.doc['input_divs'], [increase, decrease]).render(
-    train_lengths=train_lengths, count=counts, score=score, remaining=remaining)
+Template(browser.doc['input_divs_wrapper'], [increase, decrease]).render(
+    train_lengths=train_lengths)
+Template(browser.doc['out_remaining']).render(remaining=remaining)
+Template(browser.doc['out_score']).render(score=score)
 
 # ------------------------
 

@@ -7,24 +7,26 @@
 <body onload="brython(1)">
 
 <div id="input_divs">
-    <div b-code="for i in train_lengths:" class="length_block">
-        <div class="label">{i}</div>
-        <div class="increase" data-divnr="{i}" b-on="click:increase"><img src="images/up.png" alt="+" /></div>
-        <div class="value" id="count{i}">{count[i]}</div>
-        <div class="decrease" data-divnr="{i}" b-on="click:decrease"><img src="images/down.png" alt="-" /></div>
+    <div id="input_divs_wrapper">
+        <div b-code="for i in train_lengths:" class="length_block">
+            <div class="label">{i}</div>
+            <div class="increase" data-divnr="{i}" b-on="click:increase"><img src="images/up.png" alt="+" /></div>
+            <div class="value" id="count{i}">00</div>
+            <div class="decrease" data-divnr="{i}" b-on="click:decrease"><img src="images/down.png" alt="-" /></div>
+        </div>
     </div>
 
     <div class="length_block remaining">
         <div class="label">Left</div>
         <div class="increase"></div>
-        <div class="value">{remaining[0]}</div>
+        <div id="out_remaining" class="value">{remaining[0]}</div>
         <div class="decrease"></div>
     </div>
 
     <div class="length_block score">
         <div class="label">Pt</div>
         <div class="increase"></div>
-        <div class="value">{score[0]}</div>
+        <div id="out_score" class="value">{score[0]}</div>
         <div class="decrease"></div>
     </div>
 </div>
