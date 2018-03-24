@@ -1,19 +1,18 @@
 import browser
 from browser.template import Template
 
-#browser.doc['test'].text = "hello"
-
 length_values = {
     1: 1,
     2: 2,
     3: 4,
     4: 7,
     5: 10,
-    6: 15
+    6: 15,
+    7: 25,
     }
 
 remaining_pieces = 45
-train_lengths = [1, 2, 3, 4, 5, 6]
+train_lengths = [1, 2, 3, 4, 5, 6, 7]
 counts = {length: 0 for length in train_lengths}
 score = [0]
 remaining = [remaining_pieces]
@@ -41,7 +40,6 @@ def update_score():
     browser.doc['out_score'].text = score[0] = s
     browser.doc['out_remaining'].text = remaining[0] = r
     
-
 
 def increase(event, element):
     # log_event("inc", event, element)
@@ -75,19 +73,36 @@ dec_buttons = {}
 length_divs = {}
 length_blocks = {}
 
+
+def update_out():
+    s = 0
+    r = 45
+    # log(length_values)
+    # log(lengths)
+    for l in (1, 2, 3, 4, 5, 6):
+        # log("tl[l] = %s, l[l] = %s" % (length_values[l], lengths[l]))
+        s += length_values[l] * lengths[l]
+        r -= lengths[l] * l
+    # log("s=%s r=%s" % (s, r, ))
+    browser.doc['score'].text = s
+    browser.doc['remaining'].text = r
+
+
 def mk_action(divnr):
     def inc_action(event):
         lengths[divnr] += 1
         length_divs[divnr].text = lengths[divnr]
         log("inc %s" % divnr)
+        update_out()
 
     def dec_action(event):
         lengths[divnr] -= 1
         length_divs[divnr].text = lengths[divnr]
         log("dec %s" % divnr)
-    
+        update_out()
+
     return inc_action, dec_action
-    
+
 
 for length_block in browser.doc.select("#main_lengths DIV.length_block"):
     # if 'datadivnr' not in length_block.attributes:
