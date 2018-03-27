@@ -6,31 +6,6 @@
 </head>
 <body onload="brython(1)">
 
-<div id="input_divs">
-    <div id="input_divs_wrapper">
-        <div b-code="for i in train_lengths:" class="length_block">
-            <div class="label">{i}</div>
-            <div class="increase" data-divnr="{i}" b-on="click:increase"><img src="images/up.png" alt="+" /></div>
-            <div class="value" id="count{i}">00</div>
-            <div class="decrease" data-divnr="{i}" b-on="click:decrease"><img src="images/down.png" alt="-" /></div>
-        </div>
-    </div>
-
-    <div class="length_block remaining">
-        <div class="label">Left</div>
-        <div class="increase"></div>
-        <div id="out_remaining" class="value">{remaining[0]}</div>
-        <div class="decrease"></div>
-    </div>
-
-    <div class="length_block score">
-        <div class="label">Pt</div>
-        <div class="increase"></div>
-        <div id="out_score" class="value">{score[0]}</div>
-        <div class="decrease"></div>
-    </div>
-</div>
-
 <div id="main_lengths">
     <div class="length_block" datadivnr="1">
         <div class="label">1</div>
@@ -88,6 +63,6 @@
 </div>
 <script src="js/brython.js"></script>
 <script src="js/brython_stdlib.js"></script>
-<script type="text/python" src="index.py?180324-1821" id="index.py"></script>
+<script type="text/python" src="without_template.py" id="without_template.py"></script>
 </body>
 </html>
