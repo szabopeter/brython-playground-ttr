@@ -6,8 +6,23 @@
     margin-top: 150px;
 }
 
-#input_divs_wrapper {
+.player_section {
+    border-bottom: 1px solid green;
+}
+
+.input_divs_wrapper {
     display: inline-block;
+}
+
+.name_block {
+    margin-top: 120px;
+    vertical-align: top;
+    font-size: 24px;
+    font-style: italic;
+}
+
+.name_block input {
+    border-width: 0;
 }
 
 .length_block {
