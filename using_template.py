@@ -1,6 +1,15 @@
 import browser
 from browser.template import Template
 
+
+def show_div(id):
+    browser.doc[id].style.display = 'block'
+
+def hide_div(id):
+    browser.doc[id].style.display = 'none'
+
+show_div('player_selection')
+
 length_values = {
     1: 1,
     2: 2,
@@ -56,9 +65,20 @@ def decrease(event, element):
     browser.doc['count%s' % divnr].text = counts[divnr] 
     update_score()
 
+players = ["Single"]
 
-Template(browser.doc['input_divs_wrapper'], [increase, decrease]).render(
-    train_lengths=train_lengths)
-Template(browser.doc['out_remaining']).render(remaining=remaining)
-Template(browser.doc['out_score']).render(score=score)
+@browser.doc['set_players_go'].bind('click')
+def set_players(event):
+    dd = browser.doc['set_players']
+    selected = dd.options[dd.selectedIndex].value
+    log('Selected: %s' % selected)
+    Template(browser.doc['input_divs_wrapper'], [increase, decrease]).render(train_lengths=train_lengths)
+    show_div('players')
+    hide_div('player_selection')
+
+# Template(browser.doc['out_remaining']).render(remaining=remaining)
+# Template(browser.doc['out_score']).render(score=score)
+hide_div('loading')
+show_div('player_selection')
+
 
