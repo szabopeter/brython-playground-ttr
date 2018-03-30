@@ -27,6 +27,7 @@
         <div class="name_block">
             <input type="text" value="{playername}" />
         </div>
+
         <div id="input_divs_wrapper{player}" class="input_divs_wrapper">
             <div b-code="for i in train_lengths:" class="length_block">
                 <div class="label">{i}</div>
@@ -49,12 +50,24 @@
             <div id="out_score{player}" class="value"></div>
             <div class="decrease"></div>
         </div>
+
+        <div class="score_line">
+            <div class="additional_points">
+                Tickets:
+                <input id="additional_points{player}" data-divnr="{player}_0" type="text" b-on="change:additional_points_change" />
+            </div>
+
+            <div class="total_score">
+                Total:
+                <span id="total_score{player}"></span>
+            </div>
+        </div>
     </div>
 </div>
 
 <div id="messages"></div>
 <script src="js/brython.js"></script>
 <script src="js/brython_stdlib.js"></script>
-<script type="text/python" src="using_template.py" id="using_template.py"></script>
+<script type="text/python" src="using_template.py" id="using_template_py"></script>
 </body>
 </html>

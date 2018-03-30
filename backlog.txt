@@ -1,8 +1,7 @@
 
 3   drag-n-drop / color selection
 2   editable values
-2   additional points
-    +1   longest road
+1   longest road
 1   skip player-count selection
 end game
 2   restart

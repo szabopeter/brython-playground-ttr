@@ -1,6 +1,8 @@
 
 BODY {
     background-color: navy;
+    font-family: Helvetica, Arial;
+    font-size: 24px;
 }
 
 #loading, #player_selection {
@@ -33,10 +35,12 @@ BODY {
 }
 
 .name_block {
+    text-align: left;
     margin-bottom: 1em;
 }
 
 .name_block input {
+    width: 100%;
     font-size: 24px;
     font-style: italic;
     border-width: 0;
@@ -44,15 +48,12 @@ BODY {
 
 .length_block {
     display: inline-block;
-    font-family: Helvetica, Arial;
 }
 
 .length_block DIV {
-    font-size: 24px;
     display: block;
     height: 50px;
     width: 50px;
-    text-align: center;
     vertical-align: middle;
     line-height: 50px;
 }
@@ -69,7 +70,32 @@ BODY {
 
 .score {
     font-weight: bold;
+}
+
+.additional_points, .total_score {
+    display: inline-block;
+}
+
+.additional_points {
+    width: 15em;
+}
+
+.total_score {
+    font-weight: bold;
+}
+
+.total_score SPAN {
     font-size: 32px;
+}
+
+.invalid {
+    background-color: red;
+    color: white;
+}
+
+.valid {
+    background-color: lightgreen;
+    color: black;
 }
 
 .player_color_red {
