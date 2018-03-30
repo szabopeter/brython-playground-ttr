@@ -1,13 +1,31 @@
 
+BODY {
+    background-color: navy;
+}
+
+#loading, #player_selection {
+    font-size: 36px;
+    text-align: center;
+    color: white;
+    padding: 3em;
+}
+    
+
 #input_divs,
 #main_lengths {
-    text-align: center;
     vertical-align: middle;
     margin-top: 150px;
 }
 
+#players {
+    text-align: center;
+}
+
 .player_section {
-    border-bottom: 1px solid green;
+    margin: 2px;
+    border: 1px solid white;
+    display: inline-block;
+    padding: 1em;
 }
 
 .input_divs_wrapper {
@@ -15,13 +33,12 @@
 }
 
 .name_block {
-    margin-top: 120px;
-    vertical-align: top;
-    font-size: 24px;
-    font-style: italic;
+    margin-bottom: 1em;
 }
 
 .name_block input {
+    font-size: 24px;
+    font-style: italic;
     border-width: 0;
 }
 
@@ -53,6 +70,30 @@
 .score {
     font-weight: bold;
     font-size: 32px;
+}
+
+.player_color_red {
+    background-color: red;
+    color: white;
+}
+
+.player_color_green {
+    background-color: green;
+    color: white;
+}
+
+.player_color_blue {
+    background-color: blue;
+    color: white;
+}
+
+.player_color_yellow {
+    background-color: yellow;
+}
+
+.player_color_black {
+    background-color: black;
+    color: white;
 }
 
 /*

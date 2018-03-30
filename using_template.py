@@ -2,7 +2,7 @@ import browser
 from browser.template import Template
 
 max_players = 5
-
+all_colors = "red green blue yellow black".split()
 
 def show_div(id):
     browser.doc[id].style.display = 'block'
@@ -23,10 +23,11 @@ length_values = {
     }
 
 remaining_pieces = 45
-train_lengths = [1, 2, 3, 4, 5, 6, 7]
+train_lengths = [1, 2, 3, 4, 5, 6]
 counts = [{length: 0 for length in train_lengths} for p in range(max_players)]
 score = [0,] * max_players
 remaining = [remaining_pieces, ] * max_players
+colors = list(range(max_players))
 
 
 def log(msg):
@@ -69,6 +70,7 @@ def decrease(event, element):
     browser.doc['count%s_%s' % (player_number, divnr, )].text = counts[player_number][divnr] 
     update_score(player_number)
 
+
 players = ["Single"]
 
 @browser.doc['set_players_go'].bind('click')
@@ -77,7 +79,13 @@ def set_players(event):
     selected = int(dd.options[dd.selectedIndex].value)
     log('Selected: %s' % selected)
     players = ["pl#%s" % i for i in range(selected)]
-    Template(browser.doc['players'], [increase, decrease]).render(players=players, train_lengths=train_lengths)
+    events = [increase, decrease, ]
+    Template(browser.doc['players'], events).render(
+        players=players, 
+        train_lengths=train_lengths,
+        all_colors=all_colors,
+        colors=colors
+        )
     #for i in range(selected):
     #    div_id = "input_divs_wrapper%s" % i
     #    Template(browser.doc[div_id], [increase, decrease]).render(train_lengths=train_lengths)
