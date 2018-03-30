@@ -2,8 +2,7 @@
 3   drag-n-drop / color selection
 2   editable values
 1   longest road
-1   skip player-count selection
-end game
+3   end game
 2   restart
 1   disallow negative values
 

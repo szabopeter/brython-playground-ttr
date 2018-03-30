@@ -32,7 +32,7 @@
             <div b-code="for i in train_lengths:" class="length_block">
                 <div class="label">{i}</div>
                 <div class="increase" data-divnr="{player}_{i}" b-on="click:increase"><img src="images/up.png" alt="+" /></div>
-                <div class="value" id="count{player}_{i}">00</div>
+                <div class="value" id="count{player}_{i}"></div>
                 <div class="decrease" data-divnr="{player}_{i}" b-on="click:decrease"><img src="images/down.png" alt="-" /></div>
             </div>
         </div>
@@ -55,11 +55,13 @@
             <div class="additional_points">
                 Tickets:
                 <input id="additional_points{player}" data-divnr="{player}_0" type="text" b-on="change:additional_points_change" />
+                =
+                <span id="additional_total{player}"></span>
             </div>
 
             <div class="total_score">
                 Total:
-                <span id="total_score{player}"></span>
+                <span id="total_score{player}">0</span>
             </div>
         </div>
     </div>

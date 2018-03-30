@@ -103,10 +103,12 @@ def additional_points_change(event, element):
         tickets[player_number] = points = sum([int(pt) for pt in pts])
         textbox.classList.remove('invalid')
         textbox.classList.add('valid')
+        browser.doc['additional_total%s' % player_number].text = points
     except ValueError:
         textbox.classList.remove('valid')
         textbox.classList.add('invalid')
         log("Could not parse " + text)
+        browser.doc['additional_total%s' % player_number].text = "?!"
         return
 
     update_total(player_number)
@@ -115,11 +117,15 @@ players = ["Single"]
 
 
 @browser.doc['set_players_go'].bind('click')
-def set_players(event):
+def set_players_go(event):
     dd = browser.doc['set_players']
     selected = int(dd.options[dd.selectedIndex].value)
-    log('Selected: %s' % selected)
-    players = ["Mr. " + all_colors[i].capitalize() for i in range(selected)]
+    set_players(selected)
+
+
+def set_players(player_count):
+    log('Selected: %s' % player_count)
+    players = ["Mr. " + all_colors[i].capitalize() for i in range(player_count)]
     events = [increase, decrease, additional_points_change]
     Template(browser.doc['players'], events).render(
         players=players, 
@@ -132,6 +138,7 @@ def set_players(event):
     hide_div('player_selection')
 
 hide_div('loading')
-show_div('player_selection')
+# show_div('player_selection')
+set_players(5)
 
 
