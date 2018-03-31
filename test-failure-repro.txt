@@ -1,0 +1,108 @@
+import unittest
+
+class IntegerArithmeticTestCase(unittest.TestCase):
+    def testAdd(self):  ## test method names begin 'test*'
+        self.assertEqual((1 + 2), 3)
+        self.assertEqual(0 + 1, 1)
+    def testMultiply(self):
+        self.assertEqual((0 * 10), 0)
+        self.assertEqual((5 * 8), 40)
+
+#suite = unittest.TestLoader().loadTestsFromTestCase(IntegerArithmeticTestCase)
+#unittest.TextTestRunner(verbosity=0).run(suite)
+
+class GameConfig:
+    def __init__(self):
+
+        self.max_players = 5
+        self.all_colors = "red green blue yellow black".split()
+
+        self.length_values = {
+            1: 1,
+            2: 2,
+            3: 4,
+            4: 7,
+            5: 10,
+            6: 15,
+            7: 25,
+            }
+
+        self.remaining_pieces = 45
+        self.train_lengths = [1, 2, 3, 4, 5, 6]
+
+
+game_config = GameConfig()
+
+
+class Player:
+    def __init__(self, player_number, player_control):
+        self.nr = player_number
+        self.counts = {length: 0 for length in game_config.train_lengths}
+        self.train_score = 0
+        self.ticket_score = 0
+        self.total_score = 0
+        self.remaining = game_config.remaining_pieces
+        self.color_nr = player_number
+        self.control = player_control
+        self.name = "Mr. " + self.color().capitalize()
+
+    def color(self):
+        return game_config.all_colors[self.color_nr]
+
+    def increase_count(self, length):
+        self.update_count(length, self.counts[length] + 1)
+
+    def decrease_count(self, length):
+        self.update_count(length, self.counts[length] - 1)
+
+    def update_count(self, length, count):
+        prev_count = self.counts[length]
+        if count == prev_count:
+            return
+
+        count_diff = count - prev_count
+        score_diff = game_config.length_values[length] * count_diff
+        self.counts[length] = count
+        # self.control.update_count(length, count)
+        self.update_train_score(self.train_score + score_diff)
+        self.update_remaining(self.remaining - count_diff * length)
+
+    def update_train_score(self, new_value):
+        self.train_score = new_value
+        # self.control.update_train_score(new_value)
+        self.update_total_score()
+
+    def update_remaining(self, new_value):
+        self.remaining = new_value
+        # self.control.update_remaining(new_value)
+
+    def update_total_score(self):
+        self.total_score = self.train_score + self.ticket_score
+        # self.control.update_total_score(self.total_score)
+
+    def update_ticket_score(self, new_value):
+        self.ticket_score = new_value
+        # self.control.update_additional_total(new_value)
+        # self.control.mark_additional_points_valid()
+        self.update_total_score()
+
+
+from unittest.mock import Mock
+
+class PlayerTestCase(unittest.TestCase):
+    def test_creation(self):
+        self.assertEqual(1+1, 2)
+        p = Player(2, None)
+        self.assertEqual(p.total_score, 0)
+
+    def test_scoring(self):
+        self.assertEqual(2*2, 4)
+        pc = unittest.mock.Mock()
+        p = Player(2, pc)
+        p.update_count(5, 3)
+        p.update_ticket_score(8)
+        self.assertEqual(p.total_score, 3 * 10 + 8)
+
+#suite = unittest.TestLoader().loadTestsFromTestCase(IntegerArithmeticTestCase)
+suite = unittest.TestLoader().loadTestsFromTestCase(PlayerTestCase)
+unittest.TextTestRunner(verbosity=0).run(suite)

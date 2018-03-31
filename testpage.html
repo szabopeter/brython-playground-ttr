@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>Brython playground</title>
+    <meta charset="utf-8" />
+</head>
+<body onload="brython(1)">
+
+<script src="js/brython.js"></script>
+<script src="js/brython_stdlib.js"></script>
+<script type="text/python" id="tests">
+import unittest
+import test_player
+
+suite = unittest.TestLoader().loadTestsFromTestCase(test_player.PlayerTestCase)
+unittest.TextTestRunner(verbosity=0).run(suite)
+</script>
+</body>
+</html>
