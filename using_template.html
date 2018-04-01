@@ -53,14 +53,17 @@
 
         <div class="score_line">
             <div class="additional_points">
+                LR:
+                <input type="checkbox" id="longest_road{player}" data-divnr="{player}_0" b-on="click:check_longest_road" />
+
                 Tickets:
-                <input id="additional_points{player}" data-divnr="{player}_0" type="text" b-on="change:additional_points_change" />
+                <input id="additional_points{player}" class="tickets" data-divnr="{player}_0" type="text" b-on="change:additional_points_change" />
                 =
-                <span id="additional_total{player}"></span>
+                <span id="additional_total{player}" class="additional_total"></span>
             </div>
 
             <div class="total_score">
-                Total:
+                Total<br />
                 <span id="total_score{player}">0</span>
             </div>
         </div>

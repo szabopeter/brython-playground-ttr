@@ -63,6 +63,11 @@ class PlayerControl:
         textbox.classList.add('invalid')
         self.update_additional_total("?!")
 
+    def set_longest_road(self, value):
+        checkbox = browser.doc['longest_road%s' % self.nr]
+        checkbox.checked = value
+
+
 from player import Player
 from gameconfig import game_config
 
@@ -97,8 +102,17 @@ def decrease(event, element):
     players[player_number].decrease_count(divnr)
 
 
+def check_longest_road(event, element):
+    # log_event("longest", event, element)
+    player_number, divnr = get_divnr(event)
+    for player in players:
+        has_longest_road = player.nr == player_number and event.target.checked
+        log("Set longest=%s for %s" % (has_longest_road, player.nr))
+        player.set_longest_road(has_longest_road)
+
+
 def additional_points_change(event, element):
-    #log_event("additional pts change", event, element)
+    # log_event("additional pts change", event, element)
     player_number, divnr = get_divnr(event)
     player = players[player_number]
     text = player.control.get_additional_points()
@@ -122,7 +136,7 @@ def set_players_go(event):
 
 def set_players(player_count):
     log('Selected: %s' % player_count)
-    events = [increase, decrease, additional_points_change]
+    events = [increase, decrease, additional_points_change, check_longest_road]
     Template(browser.doc['players'], events).render(
         players=players, 
         train_lengths=game_config.train_lengths

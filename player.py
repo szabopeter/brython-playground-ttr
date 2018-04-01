@@ -12,6 +12,7 @@ class Player:
         self.color_nr = player_number
         self.control = player_control
         self.name = "Mr. " + self.color().capitalize()
+        self.longest_road = False
 
     def color(self):
         return game_config.all_colors[self.color_nr]
@@ -47,7 +48,8 @@ class Player:
         self.control.update_remaining(new_value)
 
     def update_total_score(self):
-        self.total_score = self.train_score + self.ticket_score
+        longest_road_score = 10 if self.longest_road else 0
+        self.total_score = self.train_score + self.ticket_score + longest_road_score
         self.control.update_total_score(self.total_score)
 
     def update_ticket_score(self, new_value):
@@ -56,3 +58,10 @@ class Player:
         self.control.mark_additional_points_valid()
         self.update_total_score()
 
+    def set_longest_road(self, value):
+        if self.longest_road == value:
+            return
+
+        self.longest_road = value
+        self.control.set_longest_road(value)
+        self.update_total_score()

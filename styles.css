@@ -77,7 +77,16 @@ BODY {
 }
 
 .additional_points {
-    width: 15em;
+    width: 16em;
+}
+
+.additional_total {
+    display: inline-block;
+    width: 48px;
+}
+
+.tickets {
+    width: 10em;
 }
 
 .total_score {

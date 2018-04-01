@@ -9,8 +9,7 @@ class PlayerTestCase(unittest.TestCase):
         self.assertEqual(p.total_score, 0)
 
     def test_scoring(self):
-        pc = Mock()
-        p = Player(2, pc)
+        p = Player(2, Mock())
         p.update_count(5, 3)
         p.update_ticket_score(8)
         self.assertEqual(p.total_score, 3 * 10 + 8)
@@ -18,6 +17,15 @@ class PlayerTestCase(unittest.TestCase):
     def test_disallow_negative_count(self):
         p = Player(2, None)
         p.decrease_count(4)
+        self.assertEqual(p.total_score, 0)
+
+    def test_longest_road_scoring(self):
+        p = Player(3, Mock())
+
+        p.set_longest_road(True)
+        self.assertEqual(p.total_score, 10)
+
+        p.set_longest_road(False)
         self.assertEqual(p.total_score, 0)
 
 
