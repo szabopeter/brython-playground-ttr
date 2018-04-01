@@ -33,7 +33,17 @@ class PlayerControl:
         browser.doc['total_score%s' % self.nr].text = total_score
 
     def update_remaining(self, remaining):
-        browser.doc['out_remaining%s' % self.nr].text = remaining
+        div = browser.doc['out_remaining%s' % self.nr]
+        div.text = remaining
+        if remaining > 2:
+            div.classList.remove('invalid')
+            div.classList.remove('finished')
+        elif 0 <= remaining <= 2:
+            div.classList.remove('invalid')
+            div.classList.add('finished')
+        else:
+            div.classList.remove('finished')
+            div.classList.add('invalid')
 
     def update_additional_total(self, text):
         browser.doc['additional_total%s' % self.nr].text = text

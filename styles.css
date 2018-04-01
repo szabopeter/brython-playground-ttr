@@ -88,6 +88,17 @@ BODY {
     font-size: 32px;
 }
 
+.remaining.invalid {
+    background-color: white;
+    color: red;
+    border: 1px outset darkgray;
+}
+
+.remaining.finished {
+    font-weight: bold;
+    border: 1px outset darkgray;
+}
+
 .invalid {
     background-color: red;
     color: white;
