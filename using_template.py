@@ -141,7 +141,7 @@ def minimize(event, element):
     player.control.minimize()
 
 def restore(event, element):
-    log_event("restore", event, element)
+    # log_event("restore", event, element)
     player_number, divnr = get_divnr(event)
     player = players[player_number]
     player.control.restore()
