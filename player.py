@@ -13,9 +13,14 @@ class Player:
         self.control = player_control
         self.name = "Mr. " + self.color().capitalize()
         self.longest_road = False
+        self.tickets_entered = ""
 
     def color(self):
         return game_config.all_colors[self.color_nr]
+
+    def set_color_nr(self, new_color_nr):
+        self.color_nr = new_color_nr
+        self.control.update_color(self.color())
 
     def increase_count(self, length):
         self.update_count(length, self.counts[length] + 1)
@@ -38,6 +43,10 @@ class Player:
         self.update_train_score(self.train_score + score_diff)
         self.update_remaining(self.remaining - count_diff * length)
 
+    def update_counts(self):
+        for length, count in self.counts.items():
+            self.control.update_count(length, count)
+
     def update_train_score(self, new_value):
         self.train_score = new_value
         self.control.update_train_score(new_value)
@@ -52,6 +61,18 @@ class Player:
         self.total_score = self.train_score + self.ticket_score + longest_road_score
         self.control.update_total_score(self.total_score)
 
+    def set_tickets_entered(self, text):
+        self.tickets_entered = text
+
+        pts = text.split()
+        try:
+            points = sum([int(pt) for pt in pts])
+            self.update_ticket_score(points)
+        except ValueError:
+            self.control.mark_additional_points_invalid()
+            self.control.update_additional_total("?!")
+            return "Could not parse " + text
+
     def update_ticket_score(self, new_value):
         self.ticket_score = new_value
         self.control.update_additional_total(new_value)
@@ -65,3 +86,18 @@ class Player:
         self.longest_road = value
         self.control.set_longest_road(value)
         self.update_total_score()
+
+    def set_name(self, new_name):
+        self.name = new_name
+        self.control.update_name(new_name)
+
+    def update_all(self):
+        self.control.update_color(self.color())
+        self.control.update_name(self.name)
+        self.update_counts()
+        self.control.update_remaining(self.remaining)
+        self.control.update_train_score(self.train_score)
+        self.control.set_longest_road(self.longest_road)
+        self.control.set_tickets_entered(self.tickets_entered)
+        self.control.update_additional_total(self.ticket_score)
+        self.control.update_total_score(self.total_score)

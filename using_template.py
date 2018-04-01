@@ -52,6 +52,15 @@ class PlayerControl:
         textbox = browser.doc['additional_points%s' % self.nr]
         return textbox.value
 
+    def get_name(self):
+        return browser.doc['player_name%s' % self.nr].value
+
+    def update_name(self, name):
+        browser.doc['player_name%s' % self.nr].value = name
+
+    def set_tickets_entered(self, text):
+        browser.doc['additional_points%s' % self.nr].value = text
+
     def mark_additional_points_valid(self):
         textbox = browser.doc['additional_points%s' % self.nr]
         textbox.classList.remove('invalid')
@@ -74,6 +83,17 @@ class PlayerControl:
     def restore(self):
         hide_div("player_view_minimized%s" % self.nr)
         show_div("player_view_normal%s" % self.nr)
+
+    def update_color(self, color):
+        div = browser.doc['player_section%s' % self.nr]
+        class_list = div.classList
+        new_color_class_name = "player_color_%s" % color
+        class_list.add(new_color_class_name)
+        to_remove = [class_name for class_name in class_list
+                     if class_name.startswith("player_color") and class_name != new_color_class_name]
+
+        for class_name in to_remove:
+            class_list.remove(class_name)
 
 
 from player import Player
@@ -98,53 +118,55 @@ def get_divnr(event):
     return player_number, divnr
 
 
+def get_player(event):
+    player_number, _ = get_divnr(event)
+    for player in players:
+        if player.control.nr == player_number:
+            return player
+    log("Could not find control for player %s" % player_number)
+
+
 def increase(event, element):
     # log_event("inc", event, element)
     player_number, divnr = get_divnr(event)
-    players[player_number].increase_count(divnr)
+    get_player(event).increase_count(divnr)
 
 
 def decrease(event, element):
     # log_event("dec", event, element)
     player_number, divnr = get_divnr(event)
-    players[player_number].decrease_count(divnr)
+    get_player(event).decrease_count(divnr)
 
 
 def check_longest_road(event, element):
     # log_event("longest", event, element)
-    player_number, divnr = get_divnr(event)
+    player_number = get_player(event).nr
     for player in players:
         has_longest_road = player.nr == player_number and event.target.checked
-        log("Set longest=%s for %s" % (has_longest_road, player.nr))
         player.set_longest_road(has_longest_road)
 
 
 def additional_points_change(event, element):
     # log_event("additional pts change", event, element)
-    player_number, divnr = get_divnr(event)
-    player = players[player_number]
-    text = player.control.get_additional_points()
-    pts = text.split()
-    try:
-        points = sum([int(pt) for pt in pts])
-        player.update_ticket_score(points)
-    except ValueError:
-        player.control.mark_additional_points_invalid()
-        log("Could not parse " + text)
-        player.control.update_additional_total("?!")
-        return
+    player = get_player(event)
+    error = player.set_tickets_entered(event.target.value)
+    if error is not None:
+        log(error)
+
+
+def player_name_change(event, element):
+    player = get_player(event)
+    # player.set_name(player.control.get_name())
+    player.set_name(event.target.value)
+
 
 def minimize(event, element):
     # log_event("minimize", event, element)
-    player_number, divnr = get_divnr(event)
-    player = players[player_number]
-    player.control.minimize()
+    get_player(event).control.minimize()
 
 def restore(event, element):
     # log_event("restore", event, element)
-    player_number, divnr = get_divnr(event)
-    player = players[player_number]
-    player.control.restore()
+    get_player(event).control.restore()
 
 
 @browser.doc['set_players_go'].bind('click')
@@ -156,7 +178,8 @@ def set_players_go(event):
 
 def set_players(player_count):
     log('Selected: %s' % player_count)
-    events = [increase, decrease, additional_points_change, check_longest_road, minimize, restore]
+    events = [increase, decrease, additional_points_change,
+              check_longest_road, minimize, restore, player_name_change]
     Template(browser.doc['players'], events).render(
         players=players, 
         train_lengths=game_config.train_lengths
@@ -172,4 +195,8 @@ def set_players(player_count):
 hide_div('loading')
 # show_div('player_selection')
 set_players(5)
+
+# players[0].control, players[1].control = players[1].control, players[0].control
+# players[0].update_all()
+# players[1].update_all()
 
