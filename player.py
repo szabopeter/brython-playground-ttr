@@ -54,23 +54,36 @@ class Player:
 
     def update_remaining(self, new_value):
         self.remaining = new_value
-        self.control.update_remaining(new_value)
+        text = new_value if new_value != game_config.remaining_pieces else None
+        self.control.update_remaining(text)
 
     def update_total_score(self):
         longest_road_score = 10 if self.longest_road else 0
-        self.total_score = self.train_score + self.ticket_score + longest_road_score
-        self.control.update_total_score(self.total_score)
+        ticket_score = self.ticket_score if self.ticket_score is not None else 0
+        self.total_score = self.train_score + ticket_score + longest_road_score
+        if self.ticket_score is None:
+            self.control.update_total_score("?")
+        else:
+            self.control.update_total_score(self.total_score)
 
     def set_tickets_entered(self, text):
         self.tickets_entered = text
+
+        if not text.strip():
+            self.ticket_score = 0
+            self.control.update_additional_total("")
+            self.control.mark_additional_points_neutral()
+            self.update_total_score()
+            return
 
         pts = text.split()
         try:
             points = sum([int(pt) for pt in pts])
             self.update_ticket_score(points)
         except ValueError:
+            self.ticket_score = None
             self.control.mark_additional_points_invalid()
-            self.control.update_additional_total("?!")
+            self.update_total_score()
             return "Could not parse " + text
 
     def update_ticket_score(self, new_value):
