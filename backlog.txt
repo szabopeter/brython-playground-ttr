@@ -1,7 +1,7 @@
 
+2   longest road values instead of checkbox
 3   drag-n-drop / color selection
-2   editable values
 3   end game
 1   restart
 3   local storage
-2   longest road values instead of checkbox
+2   editable values
