@@ -23,6 +23,9 @@ class Player:
         self.update_count(length, self.counts[length] - 1)
 
     def update_count(self, length, count):
+        if count < 0:
+            return
+
         prev_count = self.counts[length]
         if count == prev_count:
             return

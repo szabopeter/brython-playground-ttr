@@ -15,6 +15,11 @@ class PlayerTestCase(unittest.TestCase):
         p.update_ticket_score(8)
         self.assertEqual(p.total_score, 3 * 10 + 8)
 
+    def test_disallow_negative_count(self):
+        p = Player(2, None)
+        p.decrease_count(4)
+        self.assertEqual(p.total_score, 0)
+
 
 if __name__ == '__main__':
     unittest.main()
