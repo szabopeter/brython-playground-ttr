@@ -1,7 +1,6 @@
 
 3   drag-n-drop / color selection
 2   editable values
-1   longest road
 3   end game
 2   restart
 2   minimize player
