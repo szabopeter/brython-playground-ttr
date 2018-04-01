@@ -28,6 +28,7 @@ BODY {
     border: 1px solid white;
     display: inline-block;
     padding: 1em;
+    vertical-align: top;
 }
 
 .input_divs_wrapper {
@@ -39,8 +40,13 @@ BODY {
     margin-bottom: 1em;
 }
 
+.minimize_button {
+    font-size: 24px;
+    display: inline-block;
+}
+
 .name_block input {
-    width: 100%;
+    width: 90%;
     font-size: 24px;
     font-style: italic;
     border-width: 0;

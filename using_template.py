@@ -67,6 +67,14 @@ class PlayerControl:
         checkbox = browser.doc['longest_road%s' % self.nr]
         checkbox.checked = value
 
+    def minimize(self):
+        show_div("player_view_minimized%s" % self.nr)
+        hide_div("player_view_normal%s" % self.nr)
+
+    def restore(self):
+        hide_div("player_view_minimized%s" % self.nr)
+        show_div("player_view_normal%s" % self.nr)
+
 
 from player import Player
 from gameconfig import game_config
@@ -126,6 +134,18 @@ def additional_points_change(event, element):
         player.control.update_additional_total("?!")
         return
 
+def minimize(event, element):
+    # log_event("minimize", event, element)
+    player_number, divnr = get_divnr(event)
+    player = players[player_number]
+    player.control.minimize()
+
+def restore(event, element):
+    log_event("restore", event, element)
+    player_number, divnr = get_divnr(event)
+    player = players[player_number]
+    player.control.restore()
+
 
 @browser.doc['set_players_go'].bind('click')
 def set_players_go(event):
@@ -136,11 +156,14 @@ def set_players_go(event):
 
 def set_players(player_count):
     log('Selected: %s' % player_count)
-    events = [increase, decrease, additional_points_change, check_longest_road]
+    events = [increase, decrease, additional_points_change, check_longest_road, minimize, restore]
     Template(browser.doc['players'], events).render(
         players=players, 
         train_lengths=game_config.train_lengths
         )
+
+    for player in players:
+        player.control.restore()
 
     show_div('players')
     hide_div('player_selection')

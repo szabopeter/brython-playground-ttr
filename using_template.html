@@ -24,47 +24,53 @@
 
 <div id="players" style="display: none">
     <div class="player_section player_color_{playerobj.color()}" b-code="for player, playerobj in enumerate(players):">
-        <div class="name_block">
-            <input type="text" value="{playerobj.name}" />
+        <div id="player_view_minimized{player}" class="player_view_minimized" data-divnr="{player}_0" b-on="click:restore">
+            {player}
         </div>
-
-        <div id="input_divs_wrapper{player}" class="input_divs_wrapper">
-            <div b-code="for i in train_lengths:" class="length_block">
-                <div class="label">{i}</div>
-                <div class="increase" data-divnr="{player}_{i}" b-on="click:increase"><img src="images/up.png" alt="+" /></div>
-                <div class="value" id="count{player}_{i}"></div>
-                <div class="decrease" data-divnr="{player}_{i}" b-on="click:decrease"><img src="images/down.png" alt="-" /></div>
-            </div>
-        </div>
-
-        <div class="length_block remaining">
-            <div class="label">Left</div>
-            <div class="increase"></div>
-            <div class="remaining" id="out_remaining{player}" class="value"></div>
-            <div class="decrease"></div>
-        </div>
-
-        <div class="length_block score">
-            <div class="label">Pts</div>
-            <div class="increase"></div>
-            <div id="out_score{player}" class="value"></div>
-            <div class="decrease"></div>
-        </div>
-
-        <div class="score_line">
-            <div class="additional_points">
-                LR:
-                <input type="checkbox" id="longest_road{player}" data-divnr="{player}_0" b-on="click:check_longest_road" />
-
-                Tickets:
-                <input id="additional_points{player}" class="tickets" data-divnr="{player}_0" type="text" b-on="change:additional_points_change" />
-                =
-                <span id="additional_total{player}" class="additional_total"></span>
+        <div id="player_view_normal{player}" class="player_view_normal">
+            <div class="name_block">
+                <div class="minimize_button" data-divnr="{player}_0" b-on="click:minimize">❌</div>
+                <input type="text" value="{playerobj.name}" />
             </div>
 
-            <div class="total_score">
-                Total<br />
-                <span id="total_score{player}">0</span>
+            <div id="input_divs_wrapper{player}" class="input_divs_wrapper">
+                <div b-code="for i in train_lengths:" class="length_block">
+                    <div class="label">{i}</div>
+                    <div class="increase" data-divnr="{player}_{i}" b-on="click:increase"><img src="images/up.png" alt="+" /></div>
+                    <div class="value" id="count{player}_{i}"></div>
+                    <div class="decrease" data-divnr="{player}_{i}" b-on="click:decrease"><img src="images/down.png" alt="-" /></div>
+                </div>
+            </div>
+
+            <div class="length_block remaining">
+                <div class="label">Left</div>
+                <div class="increase"></div>
+                <div class="remaining" id="out_remaining{player}" class="value"></div>
+                <div class="decrease"></div>
+            </div>
+
+            <div class="length_block score">
+                <div class="label">Pts</div>
+                <div class="increase"></div>
+                <div id="out_score{player}" class="value"></div>
+                <div class="decrease"></div>
+            </div>
+
+            <div class="score_line">
+                <div class="additional_points">
+                    LR:
+                    <input type="checkbox" id="longest_road{player}" data-divnr="{player}_0" b-on="click:check_longest_road" />
+
+                    Tickets:
+                    <input id="additional_points{player}" class="tickets" data-divnr="{player}_0" type="text" b-on="change:additional_points_change" />
+                    =
+                    <span id="additional_total{player}" class="additional_total"></span>
+                </div>
+
+                <div class="total_score">
+                    Total<br />
+                    <span id="total_score{player}">0</span>
+                </div>
             </div>
         </div>
     </div>
