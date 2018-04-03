@@ -56,12 +56,16 @@ def decrease(event, element):
     get_player(event).decrease_count(divnr)
 
 
-def check_longest_road(event, element):
-    # log_event("longest", event, element)
-    player_number = get_player(event).nr
-    for player in players:
-        has_longest_road = player.nr == player_number and event.target.checked
-        player.set_longest_road(has_longest_road)
+def longest_road_length_change(event, element):
+    player = get_player(event)
+    player.set_longest_road_length_entered(event.target.value)
+    lengths = [player.longest_road_length for player in players if player.longest_road_length]
+    if lengths:
+        longest = max(lengths)
+        for player in players:
+            if player.longest_road_length is not None:
+                has_longest = player.longest_road_length == longest
+                player.set_longest_road(has_longest)
 
 
 def additional_points_change(event, element):
@@ -97,7 +101,7 @@ def set_players_go(event):
 def set_players(player_count):
     log('Selected: %s' % player_count)
     events = [increase, decrease, additional_points_change,
-              check_longest_road, minimize, restore, player_name_change]
+              longest_road_length_change, minimize, restore, player_name_change]
     Template(browser.doc['players'], events).render(
         players=players, 
         train_lengths=game_config.train_lengths

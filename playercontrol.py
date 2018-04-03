@@ -70,8 +70,36 @@ class PlayerControl:
         textbox.classList.remove('invalid')
 
     def set_longest_road(self, value):
-        checkbox = browser.doc['longest_road%s' % self.nr]
-        checkbox.checked = value
+        textbox = browser.doc['longest_road_length%s' % self.nr]
+        classlist = textbox.classList
+        if value:
+            classlist.add('has_longest_road')
+        else:
+            classlist.remove('has_longest_road')
+
+    def set_longest_road_length(self, value):
+        textbox = browser.doc['longest_road_length%s' % self.nr]
+        if value == 0:
+            value = ""
+        textbox.value = value
+
+    def mark_longest_road_length_invalid(self):
+        textbox = browser.doc['longest_road_length%s' % self.nr]
+        classlist = textbox.classList
+        classlist.add('invalid')
+        classlist.remove('valid')
+
+    def mark_longest_road_length_valid(self):
+        textbox = browser.doc['longest_road_length%s' % self.nr]
+        classlist = textbox.classList
+        classlist.add('valid')
+        classlist.remove('invalid')
+
+    def mark_longest_road_length_neutral(self):
+        textbox = browser.doc['longest_road_length%s' % self.nr]
+        classlist = textbox.classList
+        classlist.remove('valid')
+        classlist.remove('invalid')
 
     def minimize(self):
         show_div("player_view_minimized%s" % self.nr)

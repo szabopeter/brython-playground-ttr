@@ -14,6 +14,8 @@ class Player:
         self.name = "Mr. " + self.color().capitalize()
         self.longest_road = False
         self.tickets_entered = ""
+        self.longest_road_length_entered = ""
+        self.longest_road_length = 0
 
     def color(self):
         return game_config.all_colors[self.color_nr]
@@ -61,7 +63,10 @@ class Player:
         longest_road_score = 10 if self.longest_road else 0
         ticket_score = self.ticket_score if self.ticket_score is not None else 0
         self.total_score = self.train_score + ticket_score + longest_road_score
-        if self.ticket_score is None:
+        # print("Score for %s: %s = %s + %s + 10x%s" % (
+        #     self.name, self.total_score, self.train_score, self.ticket_score, self.longest_road
+        # ))
+        if self.ticket_score is None or self.longest_road is None:
             self.control.update_total_score("?")
         else:
             self.control.update_total_score(self.total_score)
@@ -93,12 +98,44 @@ class Player:
         self.update_total_score()
 
     def set_longest_road(self, value):
-        if self.longest_road == value:
-            return
+        if value is None:
+            if self.longest_road is None:
+                return
+        else:
+            if self.longest_road == value and self.longest_road is not None:
+                return
 
         self.longest_road = value
         self.control.set_longest_road(value)
         self.update_total_score()
+
+    def set_longest_road_length_entered(self, value):
+        if self.longest_road_length_entered == value:
+            return
+
+        if not value.strip():
+            self.control.mark_longest_road_length_neutral()
+            self.control.set_longest_road_length("")
+            self.longest_road_length = 0
+            return
+
+        try:
+            int_value = int(value)
+        except ValueError:
+            self.control.mark_longest_road_length_invalid()
+            self.longest_road_length = None
+            self.set_longest_road(None)
+            return
+
+        self.set_longest_road_length(int_value)
+        self.control.mark_longest_road_length_valid()
+
+    def set_longest_road_length(self, value):
+        if self.longest_road_length == value:
+            return
+
+        self.longest_road_length = value
+        self.control.set_longest_road_length(value)
 
     def set_name(self, new_name):
         self.name = new_name

@@ -82,8 +82,23 @@ BODY {
     display: inline-block;
 }
 
+.additional_points INPUT, .additional_points SPAN {
+    vertical-align: middle;
+}
+
 .additional_points {
     width: 16em;
+}
+
+.longest_road_length {
+    width: 2em;
+    font-size: 20px;
+}
+
+.has_longest_road {
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 24px;
 }
 
 .additional_total {
@@ -92,7 +107,7 @@ BODY {
 }
 
 .tickets {
-    width: 10em;
+    width: 9em;
 }
 
 .total_score {
