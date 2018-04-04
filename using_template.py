@@ -129,7 +129,7 @@ def set_players_go(event):
 
 
 def set_players(player_count):
-    log('Selected: %s' % player_count)
+    # log('Selected: %s' % player_count)
     events = [increase, decrease, additional_points_change,
               longest_road_length_change, minimize, restore, player_name_change]
     Template(browser.doc['players'], events).render(
