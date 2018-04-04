@@ -17,7 +17,31 @@ def log_event(msg, event, element):
 from player import Player
 from gameconfig import game_config
 
-players = [Player(i, PlayerControl(i, game_config.all_colors)) for i in range(game_config.max_players)]
+controls = [PlayerControl(i, game_config.all_colors) for i in range(game_config.max_players)]
+players = [Player(i, controls[i]) for i in range(game_config.max_players)]
+
+def move_to_last(player_nr):
+    control_nr = players[player_nr].control.nr
+    for player in players:
+        if player.control.nr < control_nr:
+            continue
+        elif player.control.nr == control_nr:
+            player.control = controls[-1]
+        else:
+            player.control = controls[player.control.nr - 1]
+        player.update_all()
+
+def move_up(player_nr):
+    control_nr = players[player_nr].control.nr
+    target_control_nr = len([pl for pl in players if pl.is_minimized is False])
+    for player in players:
+        if player.control.nr == control_nr:
+            player.control = controls[target_control_nr]
+        elif target_control_nr <= player.control.nr < control_nr:
+            player.control = controls[player.control.nr + 1]
+        else:
+            continue
+        player.update_all()
 
 
 def get_divnr(event):
@@ -85,11 +109,16 @@ def player_name_change(event, element):
 
 def minimize(event, element):
     # log_event("minimize", event, element)
-    get_player(event).control.minimize()
+    player = get_player(event)
+    player.minimize()
+    move_to_last(player.nr)
+
 
 def restore(event, element):
     # log_event("restore", event, element)
-    get_player(event).control.restore()
+    player = get_player(event)
+    move_up(player.nr)
+    player.restore()
 
 
 @browser.doc['set_players_go'].bind('click')
@@ -118,7 +147,3 @@ def set_players(player_count):
 hide_div('loading')
 # show_div('player_selection')
 set_players(5)
-
-# players[0].control, players[1].control = players[1].control, players[0].control
-# players[0].update_all()
-# players[1].update_all()

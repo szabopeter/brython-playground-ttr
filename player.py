@@ -16,6 +16,7 @@ class Player:
         self.tickets_entered = ""
         self.longest_road_length_entered = ""
         self.longest_road_length = 0
+        self.is_minimized = False
 
     def color(self):
         return game_config.all_colors[self.color_nr]
@@ -155,3 +156,15 @@ class Player:
         self.control.set_tickets_entered(self.tickets_entered)
         self.control.update_additional_total(self.ticket_score)
         self.control.update_total_score(self.total_score)
+        if self.is_minimized:
+            self.control.minimize()
+        else:
+            self.control.restore()
+
+    def minimize(self):
+        self.is_minimized = True
+        self.control.minimize()
+
+    def restore(self):
+        self.is_minimized = False
+        self.control.restore()
