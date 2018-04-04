@@ -17,7 +17,7 @@ def log_event(msg, event, element):
 from player import Player
 from gameconfig import game_config
 
-players = [Player(i, PlayerControl(i)) for i in range(game_config.max_players)]
+players = [Player(i, PlayerControl(i, game_config.all_colors)) for i in range(game_config.max_players)]
 
 
 def get_divnr(event):
@@ -57,6 +57,7 @@ def decrease(event, element):
 
 
 def longest_road_length_change(event, element):
+    # log_event("lrl_change", event, element)
     player = get_player(event)
     player.set_longest_road_length_entered(event.target.value)
     lengths = [player.longest_road_length for player in players if player.longest_road_length]

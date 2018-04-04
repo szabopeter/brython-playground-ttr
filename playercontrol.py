@@ -3,8 +3,9 @@ from util import show_div, hide_div
 
 
 class PlayerControl:
-    def __init__(self, player_number):
+    def __init__(self, player_number, all_colors):
         self.nr = player_number
+        self.all_player_colors = [self.player_color(color) for color in all_colors]
 
     def get_element(self, prefix, args=None):
         if args is None:
@@ -37,14 +38,11 @@ class PlayerControl:
 
         # TODO: these constants belong to GameConfig, the logic to Player
         if remaining > 2:
-            div.classList.remove('invalid')
-            div.classList.remove('finished')
+            self.mark_with_class("out_remaining", None, "invalid", "finished")
         elif 0 <= remaining <= 2:
-            div.classList.remove('invalid')
-            div.classList.add('finished')
+            self.mark_with_class("out_remaining", "finished", "invalid")
         else:
-            div.classList.remove('finished')
-            div.classList.add('invalid')
+            self.mark_with_class("out_remaining", "invalid", "finished")
 
     def update_additional_total(self, text):
         self.get_element("additional_total").text = text
@@ -55,21 +53,28 @@ class PlayerControl:
     def set_tickets_entered(self, text):
         self.get_element("additional_points").value = text
 
+    def mark_control_with_class(self, class_list, to_add, to_remove):
+        if to_add is not None:
+            class_list.add(to_add)
+
+        for class_name in to_remove:
+            if class_name != to_add:
+                class_list.remove(class_name)
+
+    def mark_with_class(self, prefix, to_add, *to_remove):
+        # print("Marking %s with %s instead of %s" % (prefix, to_add, to_remove))
+        control = self.get_element(prefix)
+        self.mark_control_with_class(control.classList, to_add, to_remove)
+
     def mark_additional_points_valid(self):
-        textbox = self.get_element("additional_points")
-        textbox.classList.remove('invalid')
-        textbox.classList.add('valid')
+        self.mark_with_class("additional_points", "valid", "invalid")
 
     def mark_additional_points_invalid(self):
-        textbox = self.get_element("additional_points")
-        textbox.classList.remove('valid')
-        textbox.classList.add('invalid')
+        self.mark_with_class("additional_points", "invalid", "valid")
         self.update_additional_total("?!")
 
     def mark_additional_points_neutral(self):
-        textbox = self.get_element("additional_points")
-        textbox.classList.remove('valid')
-        textbox.classList.remove('invalid')
+        self.mark_with_class("additional_points", None, "invalid", "valid")
 
     def set_longest_road(self, value):
         classlist = self.get_element("longest_road_length").classList
@@ -85,22 +90,13 @@ class PlayerControl:
         self.get_element("longest_road_length").value = value
 
     def mark_longest_road_length_invalid(self):
-        textbox = self.get_element("longest_road_length")
-        classlist = textbox.classList
-        classlist.add('invalid')
-        classlist.remove('valid')
+        self.mark_with_class("longest_road_length", "invalid", "valid")
 
     def mark_longest_road_length_valid(self):
-        textbox = self.get_element("longest_road_length")
-        classlist = textbox.classList
-        classlist.add('valid')
-        classlist.remove('invalid')
+        self.mark_with_class("longest_road_length", "valid", "invalid")
 
     def mark_longest_road_length_neutral(self):
-        textbox = self.get_element("longest_road_length")
-        classlist = textbox.classList
-        classlist.remove('valid')
-        classlist.remove('invalid')
+        self.mark_with_class("longest_road_length", None, "valid", "invalid")
 
     def minimize(self):
         show_div("player_view_minimized%s" % self.nr)
@@ -110,13 +106,9 @@ class PlayerControl:
         hide_div("player_view_minimized%s" % self.nr)
         show_div("player_view_normal%s" % self.nr)
 
-    def update_color(self, color):
-        div = self.get_element("player_section")
-        class_list = div.classList
-        new_color_class_name = "player_color_%s" % color
-        class_list.add(new_color_class_name)
-        to_remove = [class_name for class_name in class_list
-                     if class_name.startswith("player_color") and class_name != new_color_class_name]
+    def player_color(self, color):
+        return "player_color_%s" % color
 
-        for class_name in to_remove:
-            class_list.remove(class_name)
+    def update_color(self, color):
+        new_color_class_name = self.player_color(color)
+        self.mark_with_class("player_section", new_color_class_name, *self.all_player_colors)

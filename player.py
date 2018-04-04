@@ -110,9 +110,13 @@ class Player:
         self.update_total_score()
 
     def set_longest_road_length_entered(self, value):
+        # print("%s =?= %s" % (self.longest_road_length_entered, value, ))
         if self.longest_road_length_entered == value:
             return
 
+        self.longest_road_length_entered = value
+
+        # print("'%s' is empty? %s" % (value, not value.strip()))
         if not value.strip():
             self.control.mark_longest_road_length_neutral()
             self.control.set_longest_road_length("")
