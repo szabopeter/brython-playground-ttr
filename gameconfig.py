@@ -6,7 +6,6 @@ class GameConfig:
         self.max_players = 5
         self.all_colors = "red green blue yellow black".split()
 
-
         self.length_values = {
             1: 1,
             2: 2,
@@ -22,4 +21,3 @@ class GameConfig:
 
 
 game_config = GameConfig()
-

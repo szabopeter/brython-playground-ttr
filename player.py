@@ -1,6 +1,8 @@
 from gameconfig import game_config
 
 
+# TODO: consider separating control-related data (*entered) from "actual" data
+
 class Player:
     def __init__(self, player_number, player_control):
         self.nr = player_number

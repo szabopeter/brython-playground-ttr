@@ -1,6 +1,9 @@
 import browser
 from util import show_div, hide_div
 
+# TODO: separate brython-specific parts, could use unit-tests for the others
+# TODO: consider in-browser integration tests to ensure valid ids here
+
 
 class PlayerControl:
     def __init__(self, player_number, all_colors):

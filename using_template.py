@@ -20,6 +20,7 @@ from gameconfig import game_config
 controls = [PlayerControl(i, game_config.all_colors) for i in range(game_config.max_players)]
 players = [Player(i, controls[i]) for i in range(game_config.max_players)]
 
+# TODO: these methods should be put in a class for unit-testing
 def move_to_last(player_nr):
     control_nr = players[player_nr].control.nr
     for player in players:
@@ -52,7 +53,7 @@ def get_divnr(event):
 
     if not attrib:
         log("Could not find data-divnr attribute!")
-        log_event(event)
+        log_event("get_divnr", event, None)
         return 0, 0
 
     data_divnr = attrib.value
@@ -138,7 +139,8 @@ def set_players(player_count):
         )
 
     for player in players:
-        player.control.restore()
+        player.is_minimized = player.nr >= player_count
+        player.update_all()
 
     show_div('players')
     hide_div('player_selection')
