@@ -6,9 +6,10 @@ from util import show_div, hide_div
 
 
 class PlayerControl:
-    def __init__(self, player_number, all_colors):
+    def __init__(self, player_number, game_config):
         self.nr = player_number
-        self.all_player_colors = [self.player_color(color) for color in all_colors]
+        self.all_player_colors = [self.player_color(color) for color in game_config.all_colors]
+        self.game_config = game_config
 
     def get_element(self, prefix, args=None):
         if args is None:
@@ -38,11 +39,13 @@ class PlayerControl:
             return
 
         div.text = remaining
+        self.mark_remaining(remaining)
 
+    def mark_remaining(self, remaining):
         # TODO: these constants belong to GameConfig, the logic to Player
-        if remaining > 2:
+        if remaining > self.game_config.max_pieces_for_finishing:
             self.mark_with_class("out_remaining", None, "invalid", "finished")
-        elif 0 <= remaining <= 2:
+        elif 0 <= remaining:
             self.mark_with_class("out_remaining", "finished", "invalid")
         else:
             self.mark_with_class("out_remaining", "invalid", "finished")

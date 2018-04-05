@@ -17,6 +17,7 @@ class GameConfig:
             }
 
         self.remaining_pieces = 45
+        self.max_pieces_for_finishing = 2
         self.train_lengths = [1, 2, 3, 4, 5, 6]
 
 

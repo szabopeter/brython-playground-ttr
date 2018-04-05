@@ -17,7 +17,7 @@ def log_event(msg, event, element):
 from player import Player
 from gameconfig import game_config
 
-controls = [PlayerControl(i, game_config.all_colors) for i in range(game_config.max_players)]
+controls = [PlayerControl(i, game_config) for i in range(game_config.max_players)]
 players = [Player(i, controls[i]) for i in range(game_config.max_players)]
 
 # TODO: these methods should be put in a class for unit-testing
@@ -149,3 +149,5 @@ def set_players(player_count):
 hide_div('loading')
 # show_div('player_selection')
 set_players(5)
+
+# TODO: run browser unit tests depending on url arg
