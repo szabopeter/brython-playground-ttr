@@ -1,21 +1,19 @@
-import browser
-from util import show_div, hide_div
+from brythonfunctions import BrythonFunctions
 
-# TODO: separate brython-specific parts, could use unit-tests for the others
+
 # TODO: consider in-browser integration tests to ensure valid ids here
-
-
 class PlayerControl:
-    def __init__(self, player_number, game_config):
+    def __init__(self, player_number, game_config, brython_functions=None):
         self.nr = player_number
         self.all_player_colors = [self.player_color(color) for color in game_config.all_colors]
         self.game_config = game_config
+        self.brython = brython_functions if brython_functions is not None else BrythonFunctions()
 
     def get_element(self, prefix, args=None):
         if args is None:
             args = (self.nr, )
         eid = prefix + "_".join([str(arg) for arg in args])
-        return browser.doc[eid]
+        return self.brython.get_element(eid)
 
     def update_count(self, length, count):
         if count == 0:
@@ -42,7 +40,6 @@ class PlayerControl:
         self.mark_remaining(remaining)
 
     def mark_remaining(self, remaining):
-        # TODO: these constants belong to GameConfig, the logic to Player
         if remaining > self.game_config.max_pieces_for_finishing:
             self.mark_with_class("out_remaining", None, "invalid", "finished")
         elif 0 <= remaining:
@@ -59,6 +56,7 @@ class PlayerControl:
     def set_tickets_entered(self, text):
         self.get_element("additional_points").value = text
 
+    # noinspection PyMethodMayBeStatic
     def mark_control_with_class(self, class_list, to_add, to_remove):
         if to_add is not None:
             class_list.add(to_add)
@@ -105,13 +103,14 @@ class PlayerControl:
         self.mark_with_class("longest_road_length", None, "valid", "invalid")
 
     def minimize(self):
-        show_div("player_view_minimized%s" % self.nr)
-        hide_div("player_view_normal%s" % self.nr)
+        self.brython.show("player_view_minimized%s" % self.nr)
+        self.brython.hide("player_view_normal%s" % self.nr)
 
     def restore(self):
-        hide_div("player_view_minimized%s" % self.nr)
-        show_div("player_view_normal%s" % self.nr)
+        self.brython.hide("player_view_minimized%s" % self.nr)
+        self.brython.show("player_view_normal%s" % self.nr)
 
+    # noinspection PyMethodMayBeStatic
     def player_color(self, color):
         return "player_color_%s" % color
 

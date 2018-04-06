@@ -18,7 +18,11 @@ from player import Player
 from gameconfig import game_config
 
 controls = [PlayerControl(i, game_config) for i in range(game_config.max_players)]
-players = [Player(i, controls[i]) for i in range(game_config.max_players)]
+
+def create_players():
+    return [Player(i, controls[i]) for i in range(game_config.max_players)]
+
+players = create_players()
 
 # TODO: these methods should be put in a class for unit-testing
 def move_to_last(player_nr):
@@ -129,6 +133,25 @@ def set_players_go(event):
     set_players(selected)
 
 
+@browser.doc["restart"].bind('click')
+def restart(event):
+    show_div("confirm_restart", "inline")
+
+
+@browser.doc["confirm_restart"].bind('click')
+def confirm_restart(event):
+    hide_div("confirm_restart")
+    # TODO: suppress parent click
+
+    global players
+    names = [player.name for player in players]
+    players = create_players()
+    for i, player in enumerate(players):
+        player.name = names[i]
+        player.update_all()
+
+# TODO event for mouse_leaving: hide confirm_restart again
+
 def set_players(player_count):
     # log('Selected: %s' % player_count)
     events = [increase, decrease, additional_points_change,
@@ -146,7 +169,8 @@ def set_players(player_count):
     hide_div('player_selection')
 
 
-hide_div('loading')
+hide_div("loading")
+show_div("main_menu")
 # show_div('player_selection')
 set_players(5)
 

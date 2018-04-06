@@ -23,6 +23,12 @@
     <button id="set_players_go">Go!</button>
 </div>
 
+<div id="main_menu" style="display: none">
+    <ul class="main_menu">
+        <li id="restart">Restart<span id="confirm_restart" style="display: none">: Confirm</span></li>
+    </ul>
+</div>
+
 <div id="players" style="display: none">
     <div id="player_section{player}" class="player_section player_color_{playerobj.color()}" b-code="for player, playerobj in enumerate(players):">
         <div id="player_view_minimized{player}" class="player_view_minimized" data-divnr="{player}_0" b-on="click:restore">

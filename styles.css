@@ -163,12 +163,14 @@ BODY {
     color: white;
 }
 
-/*
-.length_block .increase {
-    content:url(images/up.png);
+.main_menu {
+    list-style: none;
 }
 
-.length_block .decrease {
-    content:url(images/down.png);
+.main_menu LI {
+    width: 12em;
+    border: 1px solid grey;
+    background-color: white;
+    border-radius: 7px;
+    padding: 7px;
 }
-*/
