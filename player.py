@@ -109,12 +109,12 @@ class Player:
                 return
 
         self.longest_road = value
-        self.control.set_longest_road(value)
+        self.control.set_has_longest_road(value)
         self.update_total_score()
 
-    def set_longest_road_length_entered(self, value):
+    def set_longest_road_length_entered(self, value, force_update=False):
         # print("%s =?= %s" % (self.longest_road_length_entered, value, ))
-        if self.longest_road_length_entered == value:
+        if self.longest_road_length_entered == value and not force_update:
             return
 
         self.longest_road_length_entered = value
@@ -153,9 +153,12 @@ class Player:
         self.control.update_name(self.name)
         self.update_counts()
         self.control.update_remaining(self.remaining)
-        self.control.update_train_score(self.train_score)
-        self.control.set_longest_road(self.longest_road)
+        # self.control.update_train_score(self.train_score)
+        self.control.set_longest_road_length(self.longest_road_length_entered)
+        self.set_longest_road_length_entered(self.longest_road_length_entered, True)
+        self.control.set_has_longest_road(self.longest_road)
         self.control.set_tickets_entered(self.tickets_entered)
+        self.set_tickets_entered(self.tickets_entered)
         self.control.update_additional_total(self.ticket_score)
         self.control.update_total_score(self.total_score)
         if self.is_minimized:

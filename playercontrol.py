@@ -80,7 +80,7 @@ class PlayerControl:
     def mark_additional_points_neutral(self):
         self.mark_with_class("additional_points", None, "invalid", "valid")
 
-    def set_longest_road(self, value):
+    def set_has_longest_road(self, value):
         classlist = self.get_element("longest_road_length").classList
         if value:
             classlist.add('has_longest_road')

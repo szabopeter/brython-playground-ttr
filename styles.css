@@ -174,3 +174,13 @@ BODY {
     border-radius: 7px;
     padding: 7px;
 }
+
+.menu_confirmation {
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.menu_confirmation:hover {
+    background-color: lightblue;
+}

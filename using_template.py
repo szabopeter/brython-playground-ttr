@@ -138,10 +138,15 @@ def restart(event):
     show_div("confirm_restart", "inline")
 
 
+@browser.doc["restart"].bind('mouseleave')
+def restart_leave(event):
+    hide_div("confirm_restart")
+
+
 @browser.doc["confirm_restart"].bind('click')
 def confirm_restart(event):
     hide_div("confirm_restart")
-    # TODO: suppress parent click
+    event.stopPropagation()
 
     global players
     names = [player.name for player in players]
@@ -150,7 +155,6 @@ def confirm_restart(event):
         player.name = names[i]
         player.update_all()
 
-# TODO event for mouse_leaving: hide confirm_restart again
 
 def set_players(player_count):
     # log('Selected: %s' % player_count)
