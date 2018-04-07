@@ -67,7 +67,8 @@ BODY {
 .length_block .increase IMG,
 .length_block .decrease IMG
 {
-    width: 100%
+    width: 100%;
+    cursor: pointer;
 }
 
 .score, .remaining {
@@ -163,16 +164,25 @@ BODY {
     color: white;
 }
 
+#main_menu {
+    text-align:center;
+}
+
 .main_menu {
     list-style: none;
+    text-align: left;
+    display: inline-block;
 }
 
 .main_menu LI {
+    display: inline-block;
     width: 12em;
     border: 1px solid grey;
     background-color: white;
     border-radius: 7px;
     padding: 7px;
+    margin: 5px;
+    cursor: pointer;
 }
 
 .menu_confirmation {
