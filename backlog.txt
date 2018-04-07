@@ -1,5 +1,4 @@
 
-3   end game
 3   local storage
 2   reordering by drag-n-drop
 2   editable values

@@ -155,6 +155,28 @@ def confirm_restart(event):
         player.name = names[i]
         player.update_all()
 
+@browser.doc["finish"].bind('click')
+def finish(event):
+    show_div("confirm_finish", "inline")
+
+
+@browser.doc["finish"].bind('mouseleave')
+def finish_leave(event):
+    hide_div("confirm_finish")
+
+
+@browser.doc["confirm_finish"].bind('click')
+def confirm_finish(event):
+    hide_div("confirm_finish")
+    event.stopPropagation()
+
+    global players
+    global controls
+    players.sort(key=lambda p: p.total_score, reverse=True)
+    for i, player in enumerate(players):
+        player.control = controls[i]
+        player.update_all()
+
 
 def set_players(player_count):
     # log('Selected: %s' % player_count)
