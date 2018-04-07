@@ -183,6 +183,7 @@ BODY {
     padding: 7px;
     margin: 5px;
     cursor: pointer;
+    color: dimgrey;
 }
 
 .menu_confirmation {
@@ -192,5 +193,6 @@ BODY {
 }
 
 .menu_confirmation:hover {
-    background-color: lightblue;
+    background-color: #DDF;
+    color: black;
 }
