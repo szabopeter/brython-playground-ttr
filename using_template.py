@@ -149,11 +149,17 @@ def confirm_restart(event):
     event.stopPropagation()
 
     global players
-    names = [player.name for player in players]
-    players = create_players()
+    global controls_for_restart
+
     for i, player in enumerate(players):
-        player.name = names[i]
-        player.update_all()
+        if controls_for_restart is not None:
+            player.control = controls_for_restart[i]
+
+    controls_for_restart = None
+
+    for player in players:
+        player.reset()
+
 
 @browser.doc["finish"].bind('click')
 def finish(event):
@@ -165,10 +171,16 @@ def finish_leave(event):
     hide_div("confirm_finish")
 
 
+controls_for_restart = None
+
 @browser.doc["confirm_finish"].bind('click')
 def confirm_finish(event):
     hide_div("confirm_finish")
     event.stopPropagation()
+
+    global controls_for_restart
+    if controls_for_restart is None:
+        controls_for_restart = [player.control for player in players]
 
     global players
     global controls

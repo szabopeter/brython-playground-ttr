@@ -20,6 +20,19 @@ class Player:
         self.longest_road_length = 0
         self.is_minimized = False
 
+    def reset(self):
+        self.counts = {length: 0 for length in game_config.train_lengths}
+        self.train_score = 0
+        self.ticket_score = 0
+        self.total_score = 0
+        self.remaining = game_config.remaining_pieces
+        self.longest_road = False
+        self.tickets_entered = ""
+        self.longest_road_length_entered = ""
+        self.longest_road_length = 0
+        self.is_minimized = False
+        self.update_all()
+
     def color(self):
         return game_config.all_colors[self.color_nr]
 
@@ -152,14 +165,14 @@ class Player:
         self.control.update_color(self.color())
         self.control.update_name(self.name)
         self.update_counts()
-        self.control.update_remaining(self.remaining)
-        # self.control.update_train_score(self.train_score)
         self.control.set_longest_road_length(self.longest_road_length_entered)
         self.set_longest_road_length_entered(self.longest_road_length_entered, True)
         self.control.set_has_longest_road(self.longest_road)
         self.control.set_tickets_entered(self.tickets_entered)
         self.set_tickets_entered(self.tickets_entered)
         self.control.update_additional_total(self.ticket_score)
+        self.control.update_remaining(self.remaining)
+        self.control.update_train_score(self.train_score)
         self.control.update_total_score(self.total_score)
         if self.is_minimized:
             self.control.minimize()
