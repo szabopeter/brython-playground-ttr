@@ -2,6 +2,7 @@ import browser
 from browser.template import Template
 
 from playercontrol import PlayerControl
+from playerlist import PlayerList
 from util import show_div, hide_div
 
 
@@ -22,31 +23,18 @@ controls = [PlayerControl(i, game_config) for i in range(game_config.max_players
 def create_players():
     return [Player(i, controls[i]) for i in range(game_config.max_players)]
 
-players = create_players()
+players = PlayerList(create_players())
 
-# TODO: these methods should be put in a class for unit-testing
 def move_to_last(player_nr):
-    control_nr = players[player_nr].control.nr
     for player in players:
-        if player.control.nr < control_nr:
-            continue
-        elif player.control.nr == control_nr:
-            player.control = controls[-1]
-        else:
-            player.control = controls[player.control.nr - 1]
-        player.update_all()
+        if player.nr == player_nr:
+            players.minimize_and_move_to_last(player)
+            break
 
 def move_up(player_nr):
-    control_nr = players[player_nr].control.nr
-    target_control_nr = len([pl for pl in players if pl.is_minimized is False])
     for player in players:
-        if player.control.nr == control_nr:
-            player.control = controls[target_control_nr]
-        elif target_control_nr <= player.control.nr < control_nr:
-            player.control = controls[player.control.nr + 1]
-        else:
-            continue
-        player.update_all()
+        if player.nr == player_nr:
+            players.restore_and_move_up(player)
 
 
 def get_divnr(event):
@@ -182,12 +170,7 @@ def confirm_finish(event):
     if controls_for_restart is None:
         controls_for_restart = [player.control for player in players]
 
-    global players
-    global controls
     players.sort(key=lambda p: p.total_score, reverse=True)
-    for i, player in enumerate(players):
-        player.control = controls[i]
-        player.update_all()
 
 
 def set_players(player_count):

@@ -1,6 +1,6 @@
 import unittest
-from unittest.mock import Mock
-from player import Player
+
+from playerlist import PlayerList
 
 
 class PlayerMock:
@@ -27,48 +27,6 @@ class PlayerControlMock:
 
 player_count = 5
 default_controls = [PlayerControlMock(nr) for nr in range(player_count)]
-
-
-class PlayerList:
-    def __init__(self, players):
-        self.players = players[:]
-
-    def __len__(self):
-        return len(self.players)
-
-    def get_players(self):
-        return self.players
-
-    def minimize_and_move_to_last(self, player_moving):
-        controls = [p.control for p in self.players]
-        self.players.remove(player_moving)
-        self.players.append(player_moving)
-        for i in range(len(controls)):
-            player = self.players[i]
-            if player.control != controls[i]:
-                player.control = controls[i]
-                player.update_all()
-
-        player_moving.minimize()
-
-    def restore_and_move_up(self, player_moving):
-        controls = [p.control for p in self.players]
-        self.players.remove(player_moving)
-        for i in range(len(self.players)):
-            if self.players[i].is_minimized:
-                self.players.insert(i, player_moving)
-                break
-
-        if player_moving not in self.players:
-            self.players.append(player_moving)
-
-        for i in range(len(controls)):
-            player = self.players[i]
-            if player.control != controls[i]:
-                player.control = controls[i]
-                player.update_all()
-
-        player_moving.restore()
 
 
 class PlayerListTestCase(unittest.TestCase):
@@ -116,3 +74,20 @@ class PlayerListTestCase(unittest.TestCase):
         self.assert_order(pl, (0, 1, 2, 3, 4))
         self.assert_has_refreshed(pl, (False, False, False, False, False))
         self.assert_is_minimized(pl, (False, False, False, False, False))
+
+    def test_playerlist_is_iterable(self):
+        players = [PlayerMock(nr, default_controls[nr]) for nr in range(player_count)]
+        pl = PlayerList(players)
+
+        nrs = [player.nr for player in pl]
+        self.assertSequenceEqual(nrs, list(range(len(players))))
+
+    def test_sort(self):
+        players = [PlayerMock(nr, default_controls[nr]) for nr in range(player_count)]
+        players[0], players[-1] = players[-1], players[0]
+        players[0].control, players[-1].control = players[-1].control, players[0].control
+        pl = PlayerList(players)
+
+        pl.sort(key=lambda p:p.nr, reverse=True)
+        self.assert_order(pl, (4, 3, 2, 1, 0))
+        self.assert_has_refreshed(pl, (False, True, False, True, False))
