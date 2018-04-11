@@ -9,6 +9,7 @@ class PlayerMock:
         self.control = PlayerControlMock(nr) if control is None else control
         self.has_refreshed = False
         self.is_minimized = False
+        self.has_reset = True
 
     def update_all(self):
         self.has_refreshed = True
@@ -18,6 +19,10 @@ class PlayerMock:
 
     def restore(self):
         self.is_minimized = False
+
+    def reset(self):
+        self.has_reset = True
+        self.has_refreshed = True
 
 
 class PlayerControlMock:
@@ -35,6 +40,11 @@ def create_playerlist():
     return pl, players
 
 
+def clear_refresh(pl):
+    for p in pl:
+        p.has_refreshed = False
+
+
 class PlayerListTestCase(unittest.TestCase):
     def assert_order(self, playerlist, expected_nrs):
         actual_nrs = [player.nr for player in playerlist.get_players()]
@@ -43,13 +53,18 @@ class PlayerListTestCase(unittest.TestCase):
         control_nrs = [player.control.nr for player in playerlist.get_players()]
         self.assertSequenceEqual(control_nrs, list(range(len(playerlist))))
 
+    def assert_list_property_sequence(self, playerlist, key, expected_values):
+        actual_values = [key(player) for player in playerlist]
+        self.assertSequenceEqual(actual_values, expected_values)
+
     def assert_has_refreshed(self, playerlist, expected_refresh):
-        actual_refresh = [player.has_refreshed for player in playerlist.get_players()]
-        self.assertSequenceEqual(actual_refresh, expected_refresh)
+        self.assert_list_property_sequence(playerlist, lambda p: p.has_refreshed, expected_refresh)
 
     def assert_is_minimized(self, playerlist, expected_is_minimized):
-        actual_is_minimized = [player.is_minimized for player in playerlist.get_players()]
-        self.assertSequenceEqual(actual_is_minimized, expected_is_minimized)
+        self.assert_list_property_sequence(playerlist, lambda p: p.is_minimized, expected_is_minimized)
+
+    def assert_has_reset(self, playerlist, expected_reset):
+        self.assert_list_property_sequence(playerlist, lambda p: p.has_reset, expected_reset)
 
     def test_minimize_moves_to_last(self):
         pl, players = create_playerlist()
@@ -93,3 +108,26 @@ class PlayerListTestCase(unittest.TestCase):
         pl.sort(key=lambda p:p.nr, reverse=True)
         self.assert_order(pl, (4, 3, 2, 1, 0))
         self.assert_has_refreshed(pl, (False, True, False, True, False))
+
+    def test_restart(self):
+        pl, players = create_playerlist()
+        pl.minimize_and_move_to_last(players[1])
+        clear_refresh(pl)
+        pl.restart()
+        self.assert_order(pl, (0, 2, 3, 4, 1))
+        self.assert_has_reset(pl, (True, ) * 5)
+        self.assert_is_minimized(pl, (False, False, False, False, True))
+
+    def test_save_and_restore(self):
+        pl, players = create_playerlist()
+        pl.minimize_and_move_to_last(players[1])
+        clear_refresh(pl)
+        pl.save_order()
+        pl.minimize_and_move_to_last(players[0])
+        self.assert_order(pl, (2, 3, 4, 1, 0))
+        self.assert_is_minimized(pl, (False, False, False, True, True))
+        clear_refresh(pl)
+        pl.load_order()
+        self.assert_order(pl, (0, 2, 3, 4, 1))
+        self.assert_has_refreshed(pl, (True, ) * 5)
+        self.assert_is_minimized(pl, (False, False, False, False, True))

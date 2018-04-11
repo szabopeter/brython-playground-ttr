@@ -29,12 +29,15 @@ def move_to_last(player_nr):
     for player in players:
         if player.nr == player_nr:
             players.minimize_and_move_to_last(player)
+            players.save_order()
             break
 
 def move_up(player_nr):
     for player in players:
         if player.nr == player_nr:
             players.restore_and_move_up(player)
+            players.save_order()
+            break
 
 
 def get_divnr(event):
@@ -103,7 +106,6 @@ def player_name_change(event, element):
 def minimize(event, element):
     # log_event("minimize", event, element)
     player = get_player(event)
-    player.minimize()
     move_to_last(player.nr)
 
 
@@ -111,7 +113,6 @@ def restore(event, element):
     # log_event("restore", event, element)
     player = get_player(event)
     move_up(player.nr)
-    player.restore()
 
 
 @browser.doc['set_players_go'].bind('click')
@@ -136,14 +137,8 @@ def confirm_restart(event):
     hide_div("confirm_restart")
     event.stopPropagation()
 
-    global players
-    global controls_for_restart
-
-    for i, player in enumerate(players):
-        if controls_for_restart is not None:
-            player.control = controls_for_restart[i]
-
-    controls_for_restart = None
+    players.load_order()
+    players.can_save = True
 
     for player in players:
         player.reset()
@@ -159,17 +154,12 @@ def finish_leave(event):
     hide_div("confirm_finish")
 
 
-controls_for_restart = None
-
 @browser.doc["confirm_finish"].bind('click')
 def confirm_finish(event):
     hide_div("confirm_finish")
     event.stopPropagation()
 
-    global controls_for_restart
-    if controls_for_restart is None:
-        controls_for_restart = [player.control for player in players]
-
+    players.can_save = False
     players.sort(key=lambda p: p.total_score, reverse=True)
 
 

@@ -30,7 +30,6 @@ class Player:
         self.tickets_entered = ""
         self.longest_road_length_entered = ""
         self.longest_road_length = 0
-        self.is_minimized = False
         self.update_all()
 
     def color(self):
