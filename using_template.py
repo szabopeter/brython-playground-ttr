@@ -173,6 +173,12 @@ def set_players(player_count):
         )
 
     for player in players:
+        valid, message = player.control.is_valid()
+        if not valid:
+            log(message)
+            return
+
+    for player in players:
         player.is_minimized = player.nr >= player_count
         player.update_all()
 

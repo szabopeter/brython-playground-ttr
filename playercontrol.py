@@ -2,9 +2,7 @@ from brythonfunctions import BrythonFunctions
 
 
 class ControlId:
-    def __init__(self, prefix, nr, args=None):
-        if args is None:
-            args = (nr, )
+    def __init__(self, prefix, *args):
         self.cid = prefix + "_".join([str(arg) for arg in args])
 
 
@@ -17,7 +15,7 @@ class PlayerControl:
         self.brython = brython_functions if brython_functions is not None else BrythonFunctions()
 
         nr = player_number
-        self.CID_COUNT = [ControlId("count", nr, tl) for tl in range(game_config.train_lengths)]
+        self.CID_COUNT = {tl: ControlId("count", nr, tl) for tl in game_config.train_lengths}
         self.CID_OUT_SCORE = ControlId("out_score", nr)
         self.CID_TOTAL_SCORE = ControlId("total_score", nr)
         self.CID_OUT_REMAINING = ControlId("out_remaining", nr)
@@ -28,6 +26,29 @@ class PlayerControl:
         self.CID_PLAYER_VIEW_MINIMIZED = ControlId("player_view_minimized", nr)
         self.CID_PLAYER_VIEW_NORMAL = ControlId("player_view_normal", nr)
         self.CID_PLAYER_SECTION = ControlId("player_section", nr)
+
+    def is_valid(self):
+        def get_cid(name):
+            member = getattr(self, name)
+            if isinstance(member, ControlId):
+                return member
+            return None
+
+        missing = []
+        cids = [get_cid(name) for name in dir(self)]
+        for cid in cids:
+            if cid is None:
+                continue
+
+            try:
+                self.get_element(cid)
+            except KeyError:
+                missing.append(cid.cid)
+
+        if len(missing) == 0:
+            return True, None
+        message = "Can't find required ids: {idlist}".format(idlist=", ".join(missing))
+        return False, message
 
     def get_element(self, prefix, args=None):
         if isinstance(prefix, ControlId):
