@@ -1,81 +1,54 @@
-from brythonfunctions import BrythonFunctions
+from controlid import ControlIdFactory
 
 
-class ControlId:
-    def __init__(self, prefix, *args):
-        self.cid = prefix + "_".join([str(arg) for arg in args])
+def get_real_brython_functions():
+    from brythonfunctions import BrythonFunctions
+    return BrythonFunctions()
 
 
-# TODO: consider in-browser integration tests to ensure valid ids here
 class PlayerControl:
     def __init__(self, player_number, game_config, brython_functions=None):
         self.nr = player_number
         self.all_player_colors = [self.player_color(color) for color in game_config.all_colors]
         self.game_config = game_config
-        self.brython = brython_functions if brython_functions is not None else BrythonFunctions()
+        self.brython = brython_functions if brython_functions is not None else get_real_brython_functions()
 
-        nr = player_number
-        self.CID_COUNT = {tl: ControlId("count", nr, tl) for tl in game_config.train_lengths}
-        self.CID_OUT_SCORE = ControlId("out_score", nr)
-        self.CID_TOTAL_SCORE = ControlId("total_score", nr)
-        self.CID_OUT_REMAINING = ControlId("out_remaining", nr)
-        self.CID_ADDITIONAL_TOTAL = ControlId("additional_total", nr)
-        self.CID_PLAYER_NAME = ControlId("player_name", nr)
-        self.CID_ADDITIONAL_POINTS = ControlId("additional_points", nr)
-        self.CID_LONGEST_ROAD_LENGTH = ControlId("longest_road_length", nr)
-        self.CID_PLAYER_VIEW_MINIMIZED = ControlId("player_view_minimized", nr)
-        self.CID_PLAYER_VIEW_NORMAL = ControlId("player_view_normal", nr)
-        self.CID_PLAYER_SECTION = ControlId("player_section", nr)
+        cif = self.cid_factory = ControlIdFactory(self.brython, self.nr)
+        self.CID_COUNT = {tl: cif.create("count", tl) for tl in game_config.train_lengths}
+        self.CID_OUT_SCORE = cif.create("out_score")
+        self.CID_TOTAL_SCORE = cif.create("total_score")
+        self.CID_OUT_REMAINING = cif.create("out_remaining")
+        self.CID_ADDITIONAL_TOTAL = cif.create("additional_total")
+        self.CID_PLAYER_NAME = cif.create("player_name")
+        self.CID_ADDITIONAL_POINTS = cif.create("additional_points")
+        self.CID_LONGEST_ROAD_LENGTH = cif.create("longest_road_length")
+        self.CID_PLAYER_VIEW_MINIMIZED = cif.create("player_view_minimized")
+        self.CID_PLAYER_VIEW_NORMAL = cif.create("player_view_normal")
+        self.CID_PLAYER_SECTION = cif.create("player_section")
+
+    def get_all_control_ids(self):
+        return self.cid_factory.created
 
     def is_valid(self):
-        def get_cid(name):
-            member = getattr(self, name)
-            if isinstance(member, ControlId):
-                return member
-            return None
-
-        missing = []
-        cids = [get_cid(name) for name in dir(self)]
-        for cid in cids:
-            if cid is None:
-                continue
-
-            try:
-                self.get_element(cid)
-            except KeyError:
-                missing.append(cid.cid)
-
-        if len(missing) == 0:
-            return True, None
-        message = "Can't find required ids: {idlist}".format(idlist=", ".join(missing))
-        return False, message
-
-    def get_element(self, prefix, args=None):
-        if isinstance(prefix, ControlId):
-            eid = prefix.cid
-        else:
-            if args is None:
-                args = (self.nr, )
-            eid = prefix + "_".join([str(arg) for arg in args])
-        return self.brython.get_element(eid)
+        return self.cid_factory.is_valid()
 
     def update_count(self, length, count):
         if count == 0:
             count = ""
 
-        self.get_element(self.CID_COUNT[length], (self.nr, length)).text = count
+        self.CID_COUNT[length].get().text = count
 
     def update_train_score(self, train_score):
         if train_score == 0:
             train_score = ""
 
-        self.get_element(self.CID_OUT_SCORE).text = train_score
+        self.CID_OUT_SCORE.get().text = train_score
 
     def update_total_score(self, total_score):
-        self.get_element(self.CID_TOTAL_SCORE).text = total_score
+        self.CID_TOTAL_SCORE.get().text = total_score
 
     def update_remaining(self, remaining):
-        div = self.get_element(self.CID_OUT_REMAINING)
+        div = self.CID_OUT_REMAINING.get()
         if remaining is None or remaining == "":
             div.text = ""
             return
@@ -92,13 +65,13 @@ class PlayerControl:
             self.mark_with_class(self.CID_OUT_REMAINING, "invalid", "finished")
 
     def update_additional_total(self, text):
-        self.get_element(self.CID_ADDITIONAL_TOTAL).text = text
+        self.CID_ADDITIONAL_TOTAL.get().text = text
 
     def update_name(self, name):
-        self.get_element(self.CID_PLAYER_NAME).value = name
+        self.CID_PLAYER_NAME.get().value = name
 
     def set_tickets_entered(self, text):
-        self.get_element(self.CID_ADDITIONAL_POINTS).value = text
+        self.CID_ADDITIONAL_POINTS.get().value = text
 
     # noinspection PyMethodMayBeStatic
     def mark_control_with_class(self, class_list, to_add, to_remove):
@@ -109,10 +82,9 @@ class PlayerControl:
             if class_name != to_add:
                 class_list.remove(class_name)
 
-    def mark_with_class(self, prefix, to_add, *to_remove):
+    def mark_with_class(self, controlId, to_add, *to_remove):
         # print("Marking %s with %s instead of %s" % (prefix, to_add, to_remove))
-        control = self.get_element(prefix)
-        self.mark_control_with_class(control.classList, to_add, to_remove)
+        self.mark_control_with_class(controlId.get().classList, to_add, to_remove)
 
     def mark_additional_points_valid(self):
         self.mark_with_class(self.CID_ADDITIONAL_POINTS, "valid", "invalid")
@@ -125,7 +97,7 @@ class PlayerControl:
         self.mark_with_class(self.CID_ADDITIONAL_POINTS, None, "invalid", "valid")
 
     def set_has_longest_road(self, value):
-        classlist = self.get_element(self.CID_LONGEST_ROAD_LENGTH).classList
+        classlist = self.CID_LONGEST_ROAD_LENGTH.get().classList
         if value:
             classlist.add('has_longest_road')
         else:
@@ -135,7 +107,7 @@ class PlayerControl:
         if value == 0:
             value = ""
 
-        self.get_element(self.CID_LONGEST_ROAD_LENGTH).value = value
+        self.CID_LONGEST_ROAD_LENGTH.get().value = value
 
     def mark_longest_road_length_invalid(self):
         self.mark_with_class(self.CID_LONGEST_ROAD_LENGTH, "invalid", "valid")
