@@ -5,8 +5,9 @@ class BrythonFunctions:
     def get_element(self, entity_id):
         return browser.doc[entity_id]
 
-    def show(self, id):
-        browser.doc[id].style.display = 'block'
+    def show(self, id, value="block"):
+        self.get_element(id).style.display = value
 
     def hide(self, id):
-        browser.doc[id].style.display = 'none'
+        self.get_element(id).style.display = "none"
+

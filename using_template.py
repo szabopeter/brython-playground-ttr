@@ -1,9 +1,12 @@
 import browser
 from browser.template import Template
 
+from brythonfunctions import BrythonFunctions
+
 from playercontrol import PlayerControl
 from playerlist import PlayerList
-from util import show_div, hide_div
+from player import Player
+from gameconfig import game_config
 
 
 def log(msg):
@@ -15,9 +18,7 @@ def log_event(msg, event, element):
     log("%r target=%r data=%r element=%r" % (msg, dir(event.target), event.target.attributes['data-divnr'].value, element, ))
 
 
-from player import Player
-from gameconfig import game_config
-
+brython_functions = BrythonFunctions()
 controls = [PlayerControl(i, game_config) for i in range(game_config.max_players)]
 
 def create_players():
@@ -124,17 +125,17 @@ def set_players_go(event):
 
 @browser.doc["restart"].bind('click')
 def restart(event):
-    show_div("confirm_restart", "inline")
+    brython_functions.show("confirm_restart", "inline")
 
 
 @browser.doc["restart"].bind('mouseleave')
 def restart_leave(event):
-    hide_div("confirm_restart")
+    brython_functions.hide("confirm_restart")
 
 
 @browser.doc["confirm_restart"].bind('click')
 def confirm_restart(event):
-    hide_div("confirm_restart")
+    brython_functions.hide("confirm_restart")
     event.stopPropagation()
 
     players.load_order()
@@ -146,17 +147,17 @@ def confirm_restart(event):
 
 @browser.doc["finish"].bind('click')
 def finish(event):
-    show_div("confirm_finish", "inline")
+    brython_functions.show("confirm_finish", "inline")
 
 
 @browser.doc["finish"].bind('mouseleave')
 def finish_leave(event):
-    hide_div("confirm_finish")
+    brython_functions.hide("confirm_finish")
 
 
 @browser.doc["confirm_finish"].bind('click')
 def confirm_finish(event):
-    hide_div("confirm_finish")
+    brython_functions.hide("confirm_finish")
     event.stopPropagation()
 
     players.can_save = False
@@ -182,13 +183,13 @@ def set_players(player_count):
         player.is_minimized = player.nr >= player_count
         player.update_all()
 
-    show_div('players')
-    hide_div('player_selection')
+    brython_functions.show('players')
+    brython_functions.hide('player_selection')
 
 
-hide_div("loading")
-show_div("main_menu")
-# show_div('player_selection')
+brython_functions.hide("loading")
+brython_functions.show("main_menu")
+# brython_functions.show('player_selection')
 set_players(5)
 
 # TODO: run browser unit tests depending on url arg
