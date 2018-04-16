@@ -1,6 +1,7 @@
 class PlayerList:
     def __init__(self, players):
         self.players = players[:]
+        self.controls = [p.control for p in players]
         self.saved_order = None
         self.saved_minimizations = None
         self.can_save = True
@@ -26,15 +27,17 @@ class PlayerList:
     def __getitem__(self, index):
         return self.players[index]
 
-    def sort(self, key, reverse):
-        controls = [p.control for p in self.players]
-        self.players.sort(key=key, reverse=reverse)
-
+    def reassign_controls(self):
+        controls = self.controls
         for i in range(len(controls)):
             player = self.players[i]
             if player.control != controls[i]:
                 player.control = controls[i]
                 player.update_all()
+
+    def sort(self, key, reverse):
+        self.players.sort(key=key, reverse=reverse)
+        self.reassign_controls()
 
     def get_players(self):
         return self.players
@@ -43,21 +46,13 @@ class PlayerList:
         self.sort(key=lambda p: p.total_score, reverse=True)
 
     def minimize_and_move_to_last(self, player_moving):
-        controls = [p.control for p in self.players]
         self.players.remove(player_moving)
         self.players.append(player_moving)
-
-        for i in range(len(controls)):
-            player = self.players[i]
-            if player.control != controls[i]:
-                player.control = controls[i]
-                player.update_all()
-
+        self.reassign_controls()
         player_moving.minimize()
         self.save_order()
 
     def restore_and_move_up(self, player_moving):
-        controls = [p.control for p in self.players]
         self.players.remove(player_moving)
 
         for i in range(len(self.players)):
@@ -68,11 +63,7 @@ class PlayerList:
         if player_moving not in self.players:
             self.players.append(player_moving)
 
-        for i in range(len(controls)):
-            player = self.players[i]
-            if player.control != controls[i]:
-                player.control = controls[i]
-                player.update_all()
+        self.reassign_controls()
 
         player_moving.restore()
         self.save_order()
