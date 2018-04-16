@@ -19,12 +19,12 @@ def log_event(msg, event, element):
 
 
 brython_functions = BrythonFunctions()
-controls = [PlayerControl(i, game_config) for i in range(game_config.max_players)]
 
-def create_players():
-    return [Player(i, controls[i]) for i in range(game_config.max_players)]
+def create_players(player_count):
+    return [Player(i, PlayerControl(i, game_config)) for i in range(player_count)]
 
-players = PlayerList(create_players())
+players = PlayerList(create_players(game_config.max_players))
+
 
 def move_to_last(player_nr):
     for player in players:
@@ -32,6 +32,7 @@ def move_to_last(player_nr):
             players.minimize_and_move_to_last(player)
             players.save_order()
             break
+
 
 def move_up(player_nr):
     for player in players:
@@ -77,6 +78,7 @@ def decrease(event, element):
     get_player(event).decrease_count(divnr)
 
 
+# TODO: move logic to playerlist
 def longest_road_length_change(event, element):
     # log_event("lrl_change", event, element)
     player = get_player(event)
@@ -133,6 +135,7 @@ def restart_leave(event):
     brython_functions.hide("confirm_restart")
 
 
+# TODO move logic to playerlist
 @browser.doc["confirm_restart"].bind('click')
 def confirm_restart(event):
     brython_functions.hide("confirm_restart")
@@ -164,8 +167,11 @@ def confirm_finish(event):
     players.sort(key=lambda p: p.total_score, reverse=True)
 
 
+# TODO Remove setting player count completely / move to playerlist
 def set_players(player_count):
     # log('Selected: %s' % player_count)
+    global players
+    players = create_players(player_count)
     events = [increase, decrease, additional_points_change,
               longest_road_length_change, minimize, restore, player_name_change]
     Template(browser.doc['players'], events).render(
@@ -173,23 +179,22 @@ def set_players(player_count):
         train_lengths=game_config.train_lengths
         )
 
-    for player in players:
-        valid, message = player.control.is_valid()
-        if not valid:
-            log(message)
-            return
+    valid, message = player.is_valid()
+    if not valid:
+        log(message)
+        return
 
     for player in players:
-        player.is_minimized = player.nr >= player_count
         player.update_all()
 
     brython_functions.show('players')
-    brython_functions.hide('player_selection')
 
 
 brython_functions.hide("loading")
 brython_functions.show("main_menu")
 # brython_functions.show('player_selection')
 set_players(5)
+# brython_functions.hide('player_selection')
 
 # TODO: run browser unit tests depending on url arg
+
