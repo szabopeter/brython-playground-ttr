@@ -39,6 +39,9 @@ class PlayerList:
     def get_players(self):
         return self.players
 
+    def finish(self):
+        self.sort(key=lambda p: p.total_score, reverse=True)
+
     def minimize_and_move_to_last(self, player_moving):
         controls = [p.control for p in self.players]
         self.players.remove(player_moving)
@@ -51,6 +54,7 @@ class PlayerList:
                 player.update_all()
 
         player_moving.minimize()
+        self.save_order()
 
     def restore_and_move_up(self, player_moving):
         controls = [p.control for p in self.players]
@@ -71,8 +75,11 @@ class PlayerList:
                 player.update_all()
 
         player_moving.restore()
+        self.save_order()
 
     def restart(self):
+        self.load_order()
+        self.can_save = True
         for player in self.players:
             player.reset()
 

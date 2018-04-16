@@ -122,7 +122,7 @@ class PlayerListTestCase(unittest.TestCase):
         pl, players = create_playerlist()
         pl.minimize_and_move_to_last(players[1])
         clear_refresh(pl)
-        pl.save_order()
+        pl.can_save = False
         pl.minimize_and_move_to_last(players[0])
         self.assert_order(pl, (2, 3, 4, 1, 0))
         self.assert_is_minimized(pl, (False, False, False, True, True))

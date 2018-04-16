@@ -93,14 +93,12 @@ def minimize(event, element):
     # log_event("minimize", event, element)
     player = get_player(event)
     players.minimize_and_move_to_last(player)
-    players.save_order()
 
 
 def restore(event, element):
     # log_event("restore", event, element)
     player = get_player(event)
     players.restore_and_move_up(player)
-    players.save_order()
 
 
 @browser.doc['set_players_go'].bind('click')
@@ -125,12 +123,7 @@ def restart_leave(event):
 def confirm_restart(event):
     brython_functions.hide("confirm_restart")
     event.stopPropagation()
-
-    players.load_order()
-    players.can_save = True
-
-    for player in players:
-        player.reset()
+    players.restart()
 
 
 @browser.doc["finish"].bind('click')
@@ -147,9 +140,7 @@ def finish_leave(event):
 def confirm_finish(event):
     brython_functions.hide("confirm_finish")
     event.stopPropagation()
-
-    players.can_save = False
-    players.sort(key=lambda p: p.total_score, reverse=True)
+    players.finish()
 
 
 def set_players(player_count):
