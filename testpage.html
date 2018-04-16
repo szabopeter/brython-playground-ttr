@@ -9,9 +9,14 @@
 <script src="js/brython_stdlib.js"></script>
 <script type="text/python" id="tests">
 import unittest
-import test_player
 
+import test_player
 suite = unittest.TestLoader().loadTestsFromTestCase(test_player.PlayerTestCase)
+import test_controlid
+suite.addTests(unittest.TestLoader().loadTestsFromTestCase(test_controlid.ControlIdTestCase))
+import test_playerlist
+suite.addTests(unittest.TestLoader().loadTestsFromTestCase(test_playerlist.PlayerListTestCase))
+
 unittest.TextTestRunner(verbosity=0).run(suite)
 </script>
 </body>
