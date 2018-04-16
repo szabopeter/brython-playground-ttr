@@ -131,3 +131,13 @@ class PlayerListTestCase(unittest.TestCase):
         self.assert_order(pl, (0, 2, 3, 4, 1))
         self.assert_has_refreshed(pl, (True, ) * 5)
         self.assert_is_minimized(pl, (False, False, False, False, True))
+
+    def test_get_by_control_nr(self):
+        pl, players = create_playerlist()
+        pl.minimize_and_move_to_last(players[1])
+        self.assertEqual(players[0], pl[0])
+        self.assertEqual(players[1], pl[4])
+        self.assertEqual(players[2], pl[1])
+        self.assertEqual(players[3], pl[2])
+        self.assertEqual(players[4], pl[3])
+

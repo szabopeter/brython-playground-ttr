@@ -23,6 +23,9 @@ class PlayerList:
 
         return PlayerListIterator(self.players)
 
+    def __getitem__(self, index):
+        return self.players[index]
+
     def sort(self, key, reverse):
         controls = [p.control for p in self.players]
         self.players.sort(key=key, reverse=reverse)

@@ -42,25 +42,24 @@ def get_divnr(event):
     return player_number, divnr
 
 
-# TODO: should move to playerlist, optimized
-def get_player(event):
-    player_number, _ = get_divnr(event)
-    for player in players:
-        if player.control.nr == player_number:
-            return player
-    log("Could not find control for player %s" % player_number)
+def get_player(event_or_nr):
+    if isinstance(event_or_nr, int):
+        player_number = event_or_nr
+    else:
+        player_number, _ = get_divnr(event)
+    return players[player_number]
 
 
 def increase(event, element):
     # log_event("inc", event, element)
     player_number, divnr = get_divnr(event)
-    get_player(event).increase_count(divnr)
+    get_player(player_number).increase_count(divnr)
 
 
 def decrease(event, element):
     # log_event("dec", event, element)
     player_number, divnr = get_divnr(event)
-    get_player(event).decrease_count(divnr)
+    get_player(player_number).decrease_count(divnr)
 
 
 # TODO: move logic to playerlist
@@ -87,7 +86,6 @@ def additional_points_change(event, element):
 
 def player_name_change(event, element):
     player = get_player(event)
-    # player.set_name(player.control.get_name())
     player.set_name(event.target.value)
 
 
@@ -154,7 +152,6 @@ def confirm_finish(event):
     players.sort(key=lambda p: p.total_score, reverse=True)
 
 
-# TODO Remove setting player count completely / move to playerlist
 def set_players(player_count):
     # log('Selected: %s' % player_count)
     global players
