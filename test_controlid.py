@@ -1,22 +1,13 @@
 import unittest
 from controlid import ControlIdFactory
-
-
-class BrythonFunctionsMock:
-    def __init__(self, *valid_ids):
-        self.valid_ids = valid_ids
-
-    def get_element(self, eid):
-        if eid in self.valid_ids:
-            return eid
-
-        raise KeyError()
+from testutil import BrythonFunctionsMock
 
 
 class ControlIdTestCase(unittest.TestCase):
     def test_validation(self):
 
-        cif = ControlIdFactory(BrythonFunctionsMock("existing8", "existing5", "existing8_sub"), 8)
+        brython_functions = BrythonFunctionsMock.using_idlist("existing8", "existing5", "existing8_sub")
+        cif = ControlIdFactory(brython_functions, 8)
 
         self.assertTrue(cif.is_valid()[0])
 
