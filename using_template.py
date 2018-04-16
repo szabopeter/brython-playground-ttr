@@ -26,22 +26,6 @@ def create_players(player_count):
 players = PlayerList(create_players(game_config.max_players))
 
 
-def move_to_last(player_nr):
-    for player in players:
-        if player.nr == player_nr:
-            players.minimize_and_move_to_last(player)
-            players.save_order()
-            break
-
-
-def move_up(player_nr):
-    for player in players:
-        if player.nr == player_nr:
-            players.restore_and_move_up(player)
-            players.save_order()
-            break
-
-
 def get_divnr(event):
     attrib = event.target.attributes['data-divnr']
 
@@ -58,6 +42,7 @@ def get_divnr(event):
     return player_number, divnr
 
 
+# TODO: should move to playerlist, optimized
 def get_player(event):
     player_number, _ = get_divnr(event)
     for player in players:
@@ -109,13 +94,15 @@ def player_name_change(event, element):
 def minimize(event, element):
     # log_event("minimize", event, element)
     player = get_player(event)
-    move_to_last(player.nr)
+    players.minimize_and_move_to_last(player)
+    players.save_order()
 
 
 def restore(event, element):
     # log_event("restore", event, element)
     player = get_player(event)
-    move_up(player.nr)
+    players.restore_and_move_up(player)
+    players.save_order()
 
 
 @browser.doc['set_players_go'].bind('click')
