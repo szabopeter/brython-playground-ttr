@@ -112,3 +112,12 @@ class PlayerList:
 
             if need_update:
                 player.update_all()
+
+    def is_valid(self):
+        for player in self.players:
+            valid, message = player.control.is_valid()
+            if not valid:
+                return False, message
+
+        return True, None
+

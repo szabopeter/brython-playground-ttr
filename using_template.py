@@ -154,7 +154,7 @@ def set_players(player_count):
         train_lengths=game_config.train_lengths
         )
 
-    valid, message = player.is_valid()
+    valid, message = players.is_valid()
     if not valid:
         log(message)
         return
