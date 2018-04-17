@@ -113,3 +113,11 @@ class PlayerList:
 
         return True, None
 
+    def recalculate_longest_roads(self):
+        lengths = [player.longest_road_length for player in self.players if player.longest_road_length]
+        if lengths:
+            longest = max(lengths)
+            for player in self.players:
+                if player.longest_road_length is not None:
+                    has_longest = player.longest_road_length == longest
+                    player.set_longest_road(has_longest)

@@ -62,18 +62,11 @@ def decrease(event, element):
     get_player(player_number).decrease_count(divnr)
 
 
-# TODO: move logic to playerlist
 def longest_road_length_change(event, element):
     # log_event("lrl_change", event, element)
     player = get_player(event)
     player.set_longest_road_length_entered(event.target.value)
-    lengths = [player.longest_road_length for player in players if player.longest_road_length]
-    if lengths:
-        longest = max(lengths)
-        for player in players:
-            if player.longest_road_length is not None:
-                has_longest = player.longest_road_length == longest
-                player.set_longest_road(has_longest)
+    players.recalculate_longest_roads()
 
 
 def additional_points_change(event, element):
@@ -118,7 +111,6 @@ def restart_leave(event):
     brython_functions.hide("confirm_restart")
 
 
-# TODO move logic to playerlist
 @browser.doc["confirm_restart"].bind('click')
 def confirm_restart(event):
     brython_functions.hide("confirm_restart")
