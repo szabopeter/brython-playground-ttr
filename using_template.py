@@ -46,7 +46,7 @@ def get_player(event_or_nr):
     if isinstance(event_or_nr, int):
         player_number = event_or_nr
     else:
-        player_number, _ = get_divnr(event)
+        player_number, _ = get_divnr(event_or_nr)
     return players[player_number]
 
 
@@ -146,7 +146,7 @@ def confirm_finish(event):
 def set_players(player_count):
     # log('Selected: %s' % player_count)
     global players
-    players = create_players(player_count)
+    players = PlayerList(create_players(player_count))
     events = [increase, decrease, additional_points_change,
               longest_road_length_change, minimize, restore, player_name_change]
     Template(browser.doc['players'], events).render(
