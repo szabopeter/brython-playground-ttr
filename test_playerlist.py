@@ -10,6 +10,7 @@ class PlayerMock:
         self.has_refreshed = False
         self.is_minimized = False
         self.has_reset = True
+        self.total_score = 0
 
     def update_all(self):
         self.has_refreshed = True
@@ -141,3 +142,39 @@ class PlayerListTestCase(unittest.TestCase):
         self.assertEqual(players[3], pl[2])
         self.assertEqual(players[4], pl[3])
 
+    def test_restart_reloading(self):
+        pl, (red, green, blue, yellow, black) = create_playerlist()
+        for p in (green, blue, black):
+            pl.minimize_and_move_to_last(p)
+        pl.restore_and_move_up(blue)
+        self.assert_order(pl, (red.nr, yellow.nr, blue.nr, green.nr, black.nr))
+        self.assert_is_minimized(pl, (False, False, False, True, True))
+        # Red, Yellow and Blue set up a game
+
+        red.total_score = 5
+        yellow.total_score = 11
+        blue.total_score = 22
+        black.total_score = -1
+        # They played some, scored some and decided to finish the game
+
+        pl.finish()
+        self.assertFalse(pl.can_save)
+        self.assert_order(pl, (blue.nr, yellow.nr, red.nr, green.nr, black.nr))
+
+        pl.minimize_and_move_to_last(red)
+        self.assertFalse(pl.can_save)
+        self.assert_order(pl, (blue.nr, yellow.nr, green.nr, black.nr, red.nr))
+        # Blue and Yellow decided to continue just for fun, Yellow does not
+
+        blue.total_score = 22
+        yellow.total_score = 33
+        pl.finish()
+        self.assertFalse(pl.can_save)
+        self.assert_order(pl, (yellow.nr, blue.nr, red.nr, green.nr, black.nr))
+        # So the two played a bit, changed the ranking and finished the extended game
+
+        pl.restart()
+        self.assertTrue(pl.can_save)
+        self.assert_order(pl, (red.nr, yellow.nr, blue.nr, green.nr, black.nr))
+        self.assert_is_minimized(pl, (False, False, False, True, True))
+        # The trio wants to play again and restart the game

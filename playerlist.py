@@ -43,6 +43,7 @@ class PlayerList:
         return self.players
 
     def finish(self):
+        self.can_save = False
         self.sort(key=lambda p: p.total_score, reverse=True)
 
     def minimize_and_move_to_last(self, player_moving):
