@@ -158,7 +158,8 @@ def set_players(player_count):
 
 
 # TODO: set flag depending on url arg
-unittesting = False
+url = browser.doc.location.toString()
+unittesting = "mode=run_unittests" in url
 
 if not unittesting:
     brython_functions.hide("loading")
