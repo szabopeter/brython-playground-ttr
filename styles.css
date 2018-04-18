@@ -3,6 +3,7 @@ BODY {
     background-color: navy;
     font-family: Helvetica, Arial;
     font-size: 24px;
+    color: white;
 }
 
 #loading, #player_selection {
@@ -195,4 +196,9 @@ BODY {
 .menu_confirmation:hover {
     background-color: #DDF;
     color: black;
+}
+
+#testreport {
+    background-color: black;
+    color: lightgreen;
 }

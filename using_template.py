@@ -157,11 +157,40 @@ def set_players(player_count):
     brython_functions.show('players')
 
 
-brython_functions.hide("loading")
-brython_functions.show("main_menu")
-# brython_functions.show('player_selection')
-set_players(5)
-# brython_functions.hide('player_selection')
+# TODO: set flag depending on url arg
+unittesting = False
 
-# TODO: run browser unit tests depending on url arg
+if not unittesting:
+    brython_functions.hide("loading")
+    brython_functions.show("main_menu")
+    # brython_functions.show('player_selection')
+    set_players(5)
+    # brython_functions.hide('player_selection')
 
+else:
+    brython_functions.hide("loading")
+    brython_functions.show("testreport")
+
+    def set_report_text(text):
+        browser.doc["testreport"].text = text
+
+    import unittest
+    import io
+    import sys
+
+    import test_player
+    import test_controlid
+    import test_playerlist
+
+    suite = unittest.TestLoader().loadTestsFromTestCase(test_player.PlayerTestCase)
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(test_controlid.ControlIdTestCase))
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(test_playerlist.PlayerListTestCase))
+
+    set_report_text("Executing {count} test case(s), please wait...".format(count=suite.countTestCases()))
+
+    report_stream = io.StringIO()
+    unittest.TextTestRunner(verbosity=2, stream=report_stream).run(suite)
+    report = report_stream.getvalue()
+
+    sys.stderr.write(report)
+    set_report_text(report)
