@@ -182,10 +182,19 @@ else:
     import test_player
     import test_controlid
     import test_playerlist
+    import test_storage
 
-    suite = unittest.TestLoader().loadTestsFromTestCase(test_player.PlayerTestCase)
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(test_controlid.ControlIdTestCase))
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(test_playerlist.PlayerListTestCase))
+    testcases = [
+        test_player.PlayerTestCase,
+        test_controlid.ControlIdTestCase,
+        test_playerlist.PlayerListTestCase,
+        test_storage.JsonTestCase,
+    ]
+
+    suite = unittest.TestSuite()
+    loader = unittest.TestLoader()
+    for testcase in testcases:
+        suite.addTests(loader.loadTestsFromTestCase(testcase))
 
     set_report_text("Executing {count} test case(s), please wait...".format(count=suite.countTestCases()))
 
