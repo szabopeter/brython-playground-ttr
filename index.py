@@ -152,6 +152,16 @@ def confirm_save_to_browser(event):
     # TODO: save
     log("Not yet implemented (save_to_browser)")
 
+    # local storage example
+    # from browser.local_storage import storage
+    # try:
+    #     storage['tasklist']
+    # except:
+    #     storage['tasklist'] = json.dumps({})
+    #
+    # self.tasks = json.loads(storage['tasklist'])
+    # storage['tasklist'] = json.dumps(self.tasks)
+
 
 def set_players(player_count):
     # log('Selected: %s' % player_count)
@@ -175,7 +185,6 @@ def set_players(player_count):
     brython_functions.show('players')
 
 
-# TODO: set flag depending on url arg
 url = browser.doc.location.toString()
 unittesting = "mode=run_unittests" in url
 
