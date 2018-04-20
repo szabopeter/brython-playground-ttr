@@ -7,6 +7,7 @@ from testutil import BrythonFunctionsMock
 
 USE_MOCK = False
 
+
 def create_control():
     if USE_MOCK:
         from unittest.mock import Mock
@@ -40,6 +41,14 @@ class PlayerTestCase(unittest.TestCase):
 
         p.set_longest_road(False)
         self.assertEqual(p.total_score, 0)
+
+    def test_serialization(self):
+        player = Player(2, None)
+        serializable = player.serializeable()
+        clone = Player.from_serializeable(serializable)
+        self.assertEqual(player, clone)
+        self.assertEqual(player.counts, clone.counts)
+        self.assertEqual(player.total_score, clone.total_score)
 
 
 if __name__ == '__main__':

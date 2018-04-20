@@ -20,6 +20,29 @@ class Player:
         self.longest_road_length = 0
         self.is_minimized = False
 
+    def __eq__(self, other):
+        return self.nr == other.nr
+
+    def serializeable(self):
+        class FieldData:
+            def __init__(self, obj, name):
+                self.name = name
+                self.value = getattr(obj, name)
+                self.type_name = self.value.__class__
+
+        serializeable_types = (bool, int, str, list, tuple)
+        fields = [FieldData(self, attr_name) for attr_name in dir(self)]
+        fields = [f for f in fields if f.type_name in serializeable_types]
+        return fields
+
+    @staticmethod
+    def from_serializeable(serializeable):
+        player = Player(0, None)
+        for f in serializeable:
+            setattr(player, f.name, f.value)
+
+        return player
+
     def reset(self):
         self.counts = {length: 0 for length in game_config.train_lengths}
         self.train_score = 0
