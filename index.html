@@ -25,8 +25,24 @@
 
 <div id="main_menu" style="display: none">
     <ul class="main_menu">
-        <li id="restart">Restart... <span class="menu_confirmation" id="confirm_restart" style="display: none">confirm!</span></li>
-        <li id="finish">Sort by score... <span class="menu_confirmation" id="confirm_finish" style="display: none">confirm!</span></li>
+        <li id="save_to_browser">
+            Save to browser...
+            <span class="menu_confirmation" id="confirm_save_to_browser" style="display: none;">
+                save!
+            </span>
+        </li>
+        <li id="restart">
+            Restart...
+            <span class="menu_confirmation" id="confirm_restart" style="display: none">
+                confirm!
+            </span>
+        </li>
+        <li id="finish">
+            Sort by score...
+            <span class="menu_confirmation" id="confirm_finish" style="display: none">
+                confirm!
+            </span>
+        </li>
     </ul>
 </div>
 
@@ -86,7 +102,9 @@
 
 <pre id="testreport" style="display:none;"></pre>
 
-<div id="messages"></div>
+<div id="messages">
+    <pre id="messages_content"></pre>
+</div>
 <script src="js/brython.js"></script>
 <script src="js/brython_stdlib.js"></script>
 <script type="text/python" src="index.py" id="index_py"></script>

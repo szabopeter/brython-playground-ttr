@@ -10,7 +10,7 @@ from gameconfig import game_config
 
 
 def log(msg):
-    browser.doc['messages'].text = msg
+    browser.doc['messages_content'].text = msg
     print(msg)
 
 
@@ -133,6 +133,24 @@ def confirm_finish(event):
     brython_functions.hide("confirm_finish")
     event.stopPropagation()
     players.finish()
+
+
+@browser.doc["save_to_browser"].bind('click')
+def save_to_browser(event):
+    brython_functions.show("confirm_save_to_browser", "inline")
+
+
+@browser.doc["save_to_browser"].bind('mouseleave')
+def save_to_browser_leave(event):
+    brython_functions.hide("confirm_save_to_browser")
+
+
+@browser.doc["confirm_save_to_browser"].bind('click')
+def confirm_save_to_browser(event):
+    brython_functions.hide("confirm_save_to_browser")
+    event.stopPropagation()
+    # TODO: save
+    log("Not yet implemented (save_to_browser)")
 
 
 def set_players(player_count):

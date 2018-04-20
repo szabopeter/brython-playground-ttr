@@ -198,7 +198,13 @@ BODY {
     color: black;
 }
 
-#testreport {
-    background-color: black;
+#testreport, #messages {
+    background-color: #004;
     color: lightgreen;
+}
+
+#messages {
+    border-radius: 5px;
+    margin: 1em;
+    padding: 1em;
 }
