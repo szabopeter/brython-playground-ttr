@@ -158,6 +158,7 @@ BODY {
 
 .player_color_yellow {
     background-color: yellow;
+    color: black;
 }
 
 .player_color_black {
