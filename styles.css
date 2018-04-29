@@ -65,13 +65,28 @@ BODY {
     line-height: 50px;
 }
 
+.length_block .increase,
+.length_block .decrease
+{
+    cursor: pointer;
+    border-radius: 12px;
+    border: 1px solid gray;
+    opacity: 0.67;
+    background-color: lightgray;
+}
+
 .length_block .increase IMG,
 .length_block .decrease IMG
 {
     width: 100%;
-    cursor: pointer;
-    border-radius: 12px;
-    border: 1px solid gray;
+    opacity: 1;
+}
+
+.length_block .increase:hover,
+.length_block .decrease:hover
+{
+    opacity: 0.9;
+    background-color: white;
 }
 
 .score, .remaining {
