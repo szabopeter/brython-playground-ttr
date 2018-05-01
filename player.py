@@ -36,8 +36,8 @@ class Player:
         return fields
 
     @staticmethod
-    def from_serializeable(serializeable):
-        player = Player(0, None)
+    def from_serializeable(serializeable, control=None):
+        player = Player(0, control)
         for f in serializeable:
             setattr(player, f.name, f.value)
 

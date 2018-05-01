@@ -1,12 +1,13 @@
 import unittest
 
 from playerlist import PlayerList
+from testutil import create_player_control_mock
 
 
 class PlayerMock:
     def __init__(self, nr, control=None):
         self.nr = nr
-        self.control = PlayerControlMock(nr) if control is None else control
+        self.control = create_player_control_mock(nr) if control is None else control
         self.has_refreshed = False
         self.is_minimized = False
         self.has_reset = True
@@ -25,15 +26,19 @@ class PlayerMock:
         self.has_reset = True
         self.has_refreshed = True
 
+    def serializeable(self):
+        return [self.nr, self.total_score]
 
-# TODO: unite with test_player.create_control
-class PlayerControlMock:
-    def __init__(self, nr):
-        self.nr = nr
+    @staticmethod
+    def from_serializeable(serializeable):
+        nr, total_score = serializeable
+        p = PlayerMock(nr)
+        p.total_score = total_score
+        return p
 
 
 player_count = 5
-default_controls = [PlayerControlMock(nr) for nr in range(player_count)]
+default_controls = [create_player_control_mock(nr) for nr in range(player_count)]
 
 
 def create_playerlist():
@@ -179,3 +184,14 @@ class PlayerListTestCase(unittest.TestCase):
         self.assert_order(pl, (red.nr, yellow.nr, blue.nr, green.nr, black.nr))
         self.assert_is_minimized(pl, (False, False, False, True, True))
         # The trio wants to play again and restart the game
+
+    def test_serialization(self):
+        def player_from_serializeable(pser, control_nr):
+            return PlayerMock.from_serializeable(pser)
+
+        pl, players = create_playerlist()
+        serializeable = pl.serializeable()
+
+        pl2 = PlayerList.from_serializeable(serializeable, player_from_serializeable)
+
+        self.assertEqual(pl.players[0].total_score, pl2.players[0].total_score)

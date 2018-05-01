@@ -1,3 +1,5 @@
+
+
 class PlayerList:
     def __init__(self, players):
         self.players = players[:]
@@ -121,3 +123,22 @@ class PlayerList:
                 if player.longest_road_length is not None:
                     has_longest = player.longest_road_length == longest
                     player.set_longest_road(has_longest)
+
+    def serializeable(self):
+        result = [self.saved_order,
+                  self.saved_minimizations,
+                  self.can_save,
+                  [p.serializeable() for p in self.players]
+                  ]
+        return result
+
+    @staticmethod
+    def from_serializeable(serializeable, player_from_serializeable):
+        saved_order, saved_minimizations, can_save, players_serializeable = serializeable
+        players = [player_from_serializeable(pser, control_nr)
+                   for control_nr, pser in enumerate(players_serializeable)]
+        playerlist = PlayerList(players)
+        playerlist.saved_order = saved_order
+        playerlist.saved_minimizations = saved_minimizations
+        playerlist.can_save = can_save
+        return playerlist

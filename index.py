@@ -150,7 +150,14 @@ def confirm_save_to_browser(event):
     brython_functions.hide("confirm_save_to_browser")
     event.stopPropagation()
     # TODO: save
-    log("Not yet implemented (save_to_browser)")
+
+    from browser.local_storage import storage
+    import json
+
+    storage['playerlist'] = json.dumps(players.serializeable())
+
+    log("Saved...")
+    save_to_browser_leave(event)
 
     # local storage example
     # from browser.local_storage import storage
