@@ -1,9 +1,9 @@
 import unittest
+
+from gameconfig import game_config
 from player import Player
 from playercontrol import PlayerControl
-from gameconfig import game_config
 from testutil import BrythonFunctionsMock
-
 
 USE_MOCK = False
 
@@ -43,7 +43,8 @@ class PlayerTestCase(unittest.TestCase):
         self.assertEqual(p.total_score, 0)
 
     def test_serialization(self):
-        player = Player(2, None)
+        player = Player(2, create_control())
+        player.update_count(5, 3)
         serializable = player.serializeable()
         clone = Player.from_serializeable(serializable)
         self.assertEqual(player, clone)

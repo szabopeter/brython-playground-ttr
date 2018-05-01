@@ -26,6 +26,7 @@ class PlayerMock:
         self.has_refreshed = True
 
 
+# TODO: unite with test_player.create_control
 class PlayerControlMock:
     def __init__(self, nr):
         self.nr = nr
@@ -106,7 +107,7 @@ class PlayerListTestCase(unittest.TestCase):
         players[0].nr, players[-1].nr = players[-1].nr, players[0].nr
         self.assert_order(pl, (4, 1, 2, 3, 0))
 
-        pl.sort(key=lambda p:p.nr, reverse=True)
+        pl.sort(key=lambda p: p.nr, reverse=True)
         self.assert_order(pl, (4, 3, 2, 1, 0))
         self.assert_has_refreshed(pl, (False, True, False, True, False))
 

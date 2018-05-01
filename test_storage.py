@@ -36,7 +36,7 @@ class JsonTestCase(unittest.TestCase):
         self.assertIsInstance(copy_nr, int)
 
     def test_dump_class(self):
-        class Animal():
+        class Animal:
             def __init__(self, name=None):
                 self.name = name
 

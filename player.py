@@ -30,7 +30,7 @@ class Player:
                 self.value = getattr(obj, name)
                 self.type_name = self.value.__class__
 
-        serializeable_types = (bool, int, str, list, tuple)
+        serializeable_types = (bool, int, str, list, tuple, dict)
         fields = [FieldData(self, attr_name) for attr_name in dir(self)]
         fields = [f for f in fields if f.type_name in serializeable_types]
         return fields
