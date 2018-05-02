@@ -48,13 +48,6 @@ class ClassListMock:
         pass
 
 
-USE_MOCK = False
-
-
 def create_player_control_mock(nr=0):
-    if USE_MOCK:
-        from unittest.mock import Mock
-        return Mock()
-
     brython_functions = BrythonFunctionsMock.accepting_anything()
     return PlayerControl(nr, game_config, brython_functions)
