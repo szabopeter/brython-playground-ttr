@@ -32,14 +32,17 @@ class Player:
 
         serializeable_types = (bool, int, str, list, tuple, dict)
         fields = [FieldData(self, attr_name) for attr_name in dir(self)]
-        fields = [f for f in fields if f.type_name in serializeable_types]
-        return fields
+        fields = [f for f in fields
+                  if f.type_name in serializeable_types
+                  and not f.name.startswith("__")]
+        field_dict = {f.name: f.value for f in fields}
+        return field_dict
 
     @staticmethod
     def from_serializeable(serializeable, control=None):
         player = Player(0, control)
-        for f in serializeable:
-            setattr(player, f.name, f.value)
+        for name, value in serializeable.items():
+            setattr(player, name, value)
 
         return player
 
