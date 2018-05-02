@@ -149,25 +149,43 @@ def save_to_browser_leave(event):
 def confirm_save_to_browser(event):
     brython_functions.hide("confirm_save_to_browser")
     event.stopPropagation()
-    # TODO: save
-    log("Saving...")
+    save_to_local_storage()
 
+
+@browser.doc["load_from_browser"].bind('click')
+def load_from_browser(event):
+    brython_functions.show("confirm_load_from_browser", "inline")
+
+
+@browser.doc["load_from_browser"].bind('mouseleave')
+def load_from_browser_leave(event):
+    brython_functions.hide("confirm_load_from_browser")
+
+
+@browser.doc["confirm_load_from_browser"].bind('click')
+def confirm_load_from_browser(event):
+    brython_functions.hide("confirm_load_from_browser")
+    event.stopPropagation()
+    load_from_local_storage()
+
+
+def load_from_local_storage():
+    log("Load is not implemented...")
+
+
+def save_to_local_storage():
+    log("Saving...")
     from browser.local_storage import storage
     import json
-
     ser = players.serializeable()
     log("Serializeable:")
     log(str(ser))
-
     json_dump = json.dumps(ser)
     log("Json:")
     log(json_dump)
-
     storage['playerlist'] = json_dump
-
     log("Saved...")
-    save_to_browser_leave(event)
-
+    # TODO: show checkmark on UI
     # local storage example
     # from browser.local_storage import storage
     # try:
