@@ -143,6 +143,7 @@ def save_to_browser(event):
 @browser.doc["save_to_browser"].bind('mouseleave')
 def save_to_browser_leave(event):
     brython_functions.hide("confirm_save_to_browser")
+    brython_functions.hide("checkmark_save_to_browser")
 
 
 @browser.doc["confirm_save_to_browser"].bind('click')
@@ -150,6 +151,7 @@ def confirm_save_to_browser(event):
     brython_functions.hide("confirm_save_to_browser")
     event.stopPropagation()
     save_to_local_storage()
+    brython_functions.show("checkmark_save_to_browser", "inline")
 
 
 @browser.doc["load_from_browser"].bind('click')
@@ -205,7 +207,7 @@ def save_to_local_storage():
     log(json_dump)
     storage['playerlist'] = json_dump
     log("Saved...")
-    # TODO: show checkmark on UI
+
     # local storage example
     # from browser.local_storage import storage
     # try:
