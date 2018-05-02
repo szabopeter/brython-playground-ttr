@@ -81,7 +81,7 @@ class PlayerList:
         if not self.can_save:
             return
 
-        self.saved_order = self.players[:]
+        self.saved_order = [p.nr for p in self.players]
         self.saved_minimizations = [player.is_minimized for player in self.players]
 
     def load_order(self):
@@ -90,7 +90,8 @@ class PlayerList:
 
         controls = [p.control for p in self.players]
 
-        self.players = self.saved_order[:]
+        players = {p.nr: p for p in self.players}
+        self.players = [players[nr] for nr in self.saved_order]
 
         for i in range(len(controls)):
             player = self.players[i]
@@ -142,3 +143,7 @@ class PlayerList:
         playerlist.saved_minimizations = saved_minimizations
         playerlist.can_save = can_save
         return playerlist
+
+    def update_all(self):
+        for player in self.players:
+            player.update_all()

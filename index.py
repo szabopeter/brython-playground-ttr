@@ -170,7 +170,27 @@ def confirm_load_from_browser(event):
 
 
 def load_from_local_storage():
-    log("Load is not implemented...")
+    log("Loading...")
+
+    from browser.local_storage import storage
+    import json
+
+    json_dump = storage['playerlist']
+    log("Json:")
+    log(json_dump)
+
+    ser = json.loads(json_dump)
+    log("Serializeable")
+    log(str(ser))
+
+    global players
+
+    def player_from_serializeable(serializeable, control_nr):
+        control = PlayerControl(control_nr, game_config)
+        return Player.from_serializeable(serializeable, control)
+    players = PlayerList.from_serializeable(ser, player_from_serializeable)
+
+    players.update_all()
 
 
 def save_to_local_storage():

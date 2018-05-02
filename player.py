@@ -40,10 +40,13 @@ class Player:
 
     @staticmethod
     def from_serializeable(serializeable, control=None):
-        player = Player(0, control)
+        nr = serializeable['nr']
+        player = Player(nr, control)
         for name, value in serializeable.items():
+            # print("Setting {name}={value} on {player}".format(name=name, value=value, player=player))
             setattr(player, name, value)
 
+        player.counts = {int(key): int(value) for key, value in player.counts.items()}
         return player
 
     def reset(self):
