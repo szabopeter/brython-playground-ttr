@@ -46,6 +46,7 @@ class Player:
             # print("Setting {name}={value} on {player}".format(name=name, value=value, player=player))
             setattr(player, name, value)
 
+        # A bit of post-processing
         player.counts = {int(key): int(value) for key, value in player.counts.items()}
         return player
 

@@ -172,51 +172,27 @@ def confirm_load_from_browser(event):
 
 
 def load_from_local_storage():
-    log("Loading...")
-
-    from browser.local_storage import storage
-    import json
-
-    json_dump = storage['playerlist']
-    log("Json:")
-    log(json_dump)
-
-    ser = json.loads(json_dump)
-    log("Serializeable")
-    log(str(ser))
-
-    global players
-
     def player_from_serializeable(serializeable, control_nr):
         control = PlayerControl(control_nr, game_config)
         return Player.from_serializeable(serializeable, control)
-    players = PlayerList.from_serializeable(ser, player_from_serializeable)
 
+    from browser.local_storage import storage
+    import json
+    global players
+
+    json_dump = storage['playerlist']
+    ser = json.loads(json_dump)
+    players = PlayerList.from_serializeable(ser, player_from_serializeable)
     players.update_all()
 
 
 def save_to_local_storage():
-    log("Saving...")
     from browser.local_storage import storage
     import json
-    ser = players.serializeable()
-    log("Serializeable:")
-    log(str(ser))
-    json_dump = json.dumps(ser)
-    log("Json:")
-    log(json_dump)
-    storage['playerlist'] = json_dump
-    log("Saved...")
 
-    # local storage example
-    # from browser.local_storage import storage
-    # try:
-    #     storage['tasklist']
-    # except:
-    #     storage['tasklist'] = json.dumps({})
-    #
-    # self.tasks = json.loads(storage['tasklist'])
-    # storage['tasklist'] = json.dumps(self.tasks)
+    ser = players.serializeable()
+    json_dump = json.dumps(ser)
+    storage['playerlist'] = json_dump
 
 
 def set_players(player_count):

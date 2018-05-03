@@ -1,5 +1,5 @@
 
-3   local storage
+4   preview ordered results in sidebar
 2   reordering by drag-n-drop
 2   editable values
 5   history + graph (depends on: end game)
