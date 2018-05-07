@@ -22,6 +22,21 @@ BODY {
 
 #players {
     text-align: center;
+    vertical-align: top;
+}
+
+#players.with_summary {
+    width: 80%;
+}
+
+.player_summary_name {
+    display: inline-block;
+    width: 80%;
+}
+
+.player_summary_score {
+    display: inline-block;
+    width: 20%;
 }
 
 .player_section {

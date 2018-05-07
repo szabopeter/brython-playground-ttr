@@ -55,7 +55,22 @@
     </ul>
 </div>
 
-<div id="players" style="display: none">
+<div id="summary" style="display:none;">
+    <div id="summary_collapsed">
+        Standings
+    </div>
+    <div id="summary_expanded">
+        <div id="summary_collapse" class="minimize_button">Standings ❌</div>
+        <div id="players_summary" b-code="for nr, player in enumerate(players)">
+            <div id="player_summary{nr}">
+                <span id="player_summary_name{nr}" class="player_summary_name"></span>
+                <span id="player_summary_score{nr}" class="player_summary_score"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="players" style="display: none;">
     <div id="player_section{player}" class="player_section player_color_{playerobj.color()}" b-code="for player, playerobj in enumerate(players):">
         <div id="player_view_minimized{player}" class="player_view_minimized" data-divnr="{player}_0" b-on="click:restore">
             {player}

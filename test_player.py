@@ -10,7 +10,7 @@ def create_player(player_number):
 
 class PlayerTestCase(unittest.TestCase):
     def test_creation(self):
-        p = Player(2, None)
+        p = create_player(2)
         self.assertEqual(p.total_score, 0)
 
     def test_scoring(self):

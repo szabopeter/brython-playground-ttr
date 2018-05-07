@@ -4,7 +4,7 @@ from gameconfig import game_config
 # TODO: consider separating control-related data (*entered) from "actual" data
 
 class Player:
-    def __init__(self, player_number, player_control):
+    def __init__(self, player_number, player_control, player_summary=None):
         self.nr = player_number
         self.counts = {length: 0 for length in game_config.train_lengths}
         self.train_score = 0
@@ -19,6 +19,9 @@ class Player:
         self.longest_road_length_entered = ""
         self.longest_road_length = 0
         self.is_minimized = False
+        self.game_summary = player_summary
+        if player_summary is not None:
+            player_summary.register(self)
 
     def __eq__(self, other):
         return self.nr == other.nr
@@ -39,9 +42,9 @@ class Player:
         return field_dict
 
     @staticmethod
-    def from_serializeable(serializeable, control=None):
+    def from_serializeable(serializeable, control=None, summary=None):
         nr = serializeable['nr']
-        player = Player(nr, control)
+        player = Player(nr, control, summary)
         for name, value in serializeable.items():
             # print("Setting {name}={value} on {player}".format(name=name, value=value, player=player))
             setattr(player, name, value)
@@ -49,6 +52,10 @@ class Player:
         # A bit of post-processing
         player.counts = {int(key): int(value) for key, value in player.counts.items()}
         return player
+
+    def mark_dirty_in_summary(self):
+        if self.game_summary is not None:
+            self.game_summary.update_player(self)
 
     def reset(self):
         self.counts = {length: 0 for length in game_config.train_lengths}
@@ -61,6 +68,7 @@ class Player:
         self.longest_road_length_entered = ""
         self.longest_road_length = 0
         self.update_all()
+        self.mark_dirty_in_summary()
 
     def color(self):
         return game_config.all_colors[self.color_nr]
@@ -68,6 +76,7 @@ class Player:
     def set_color_nr(self, new_color_nr):
         self.color_nr = new_color_nr
         self.control.update_color(self.color())
+        self.mark_dirty_in_summary()
 
     def increase_count(self, length):
         self.update_count(length, self.counts[length] + 1)
@@ -115,6 +124,8 @@ class Player:
             self.control.update_total_score("?")
         else:
             self.control.update_total_score(self.total_score)
+
+        self.mark_dirty_in_summary()
 
     def set_tickets_entered(self, text):
         self.tickets_entered = text
@@ -189,6 +200,7 @@ class Player:
     def set_name(self, new_name):
         self.name = new_name
         self.control.update_name(new_name)
+        self.mark_dirty_in_summary()
 
     def update_all(self):
         self.control.update_color(self.color())
@@ -211,7 +223,9 @@ class Player:
     def minimize(self):
         self.is_minimized = True
         self.control.minimize()
+        self.mark_dirty_in_summary()
 
     def restore(self):
         self.is_minimized = False
         self.control.restore()
+        self.mark_dirty_in_summary()
