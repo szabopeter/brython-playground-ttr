@@ -36,6 +36,7 @@ class PlayerSummary:
         self.name = None
         self.score = None
         self.color = None
+        self.is_minimized = None
 
         assert isinstance(cif, ControlIdFactory)
         self.cif = cif
@@ -49,6 +50,7 @@ class PlayerSummary:
 
         assert isinstance(self.CID_NAME, ControlId)
         assert isinstance(self.CID_SCORE, ControlId)
+        assert isinstance(self.CID_PLAYER, ControlId)
 
         if self.name != player.name:
             self.name = player.name
@@ -68,3 +70,10 @@ class PlayerSummary:
             self.color = new_color
             css_class = "player_color_{color}".format(color=self.color)
             self.cif.brython_functions.add_class(self.CID_PLAYER.cid, css_class)
+
+        if self.is_minimized != player.is_minimized:
+            self.is_minimized = player.is_minimized
+            if self.is_minimized:
+                self.cif.brython_functions.hide(self.CID_PLAYER.cid)
+            else:
+                self.cif.brython_functions.show(self.CID_PLAYER.cid)
