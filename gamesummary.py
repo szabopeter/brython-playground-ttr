@@ -41,6 +41,7 @@ class PlayerSummary:
         self.cif = cif
         self.CID_NAME = cif.create("player_summary_name", self.nr)
         self.CID_SCORE = cif.create("player_summary_score", self.nr)
+        self.CID_PLAYER = cif.create("player_summary", self.nr)
 
     def update(self, player):
         if self.cif.is_valid() == False:
@@ -58,6 +59,12 @@ class PlayerSummary:
             self.CID_SCORE.get().text = self.score
 
         new_color = player.color()
+        # print("Change color: {old} -> {new}".format(old=self.color, new=new_color))
         if self.color != new_color:
+            if self.color is not None:
+                css_class = "player_color_{color}".format(color=self.color)
+                self.cif.brython_functions.remove_class(self.CID_PLAYER.cid, css_class)
+
             self.color = new_color
-            # TODO: html + cid
+            css_class = "player_color_{color}".format(color=self.color)
+            self.cif.brython_functions.add_class(self.CID_PLAYER.cid, css_class)

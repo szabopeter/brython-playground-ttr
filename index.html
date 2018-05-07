@@ -61,8 +61,8 @@
     </div>
     <div id="summary_expanded">
         <div id="summary_collapse" class="minimize_button">Standings ❌</div>
-        <div id="players_summary" b-code="for nr, player in enumerate(players)">
-            <div id="player_summary{nr}">
+        <div id="players_summary">
+            <div id="player_summary{nr}" class="player_summary" b-code="for nr, player in enumerate(players)">
                 <span id="player_summary_name{nr}" class="player_summary_name"></span>
                 <span id="player_summary_score{nr}" class="player_summary_score"></span>
             </div>

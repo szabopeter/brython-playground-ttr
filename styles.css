@@ -29,14 +29,22 @@ BODY {
     width: 80%;
 }
 
+.player_summary {
+    white-space: nowrap;
+    padding: 4px;
+    border: 1px solid white;
+}
+
 .player_summary_name {
     display: inline-block;
-    width: 80%;
+    width: 10em;
+    overflow: hidden;
+    vertical-align: middle;
 }
 
 .player_summary_score {
     display: inline-block;
-    width: 20%;
+    width: 2em;
 }
 
 .player_section {
