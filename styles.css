@@ -29,6 +29,19 @@ BODY {
     width: 80%;
 }
 
+.menu_button {
+    cursor: pointer;
+    background-color: white;
+    color: dimgrey;
+    border: 1px solid grey;
+}
+
+.player_summary_title {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px;
+}
+
 .player_summary {
     white-space: nowrap;
     padding: 4px;
@@ -219,13 +232,9 @@ BODY {
 .main_menu LI {
     display: inline-block;
     width: 12em;
-    border: 1px solid grey;
-    background-color: white;
     border-radius: 7px;
     padding: 7px;
     margin: 5px;
-    cursor: pointer;
-    color: dimgrey;
 }
 
 .menu_confirmation {

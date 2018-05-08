@@ -199,7 +199,6 @@ def load_from_local_storage():
     import json
     global players
 
-    # TODO: test summary after loading
     game_summary.clear()
 
     json_dump = storage['playerlist']
@@ -233,6 +232,11 @@ def set_players(player_count):
     )
 
     valid, message = players.is_valid()
+    if not valid:
+        log(message)
+        return
+
+    valid, message = game_summary.is_valid()
     if not valid:
         log(message)
         return

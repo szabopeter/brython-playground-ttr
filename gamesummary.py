@@ -28,6 +28,9 @@ class GameSummary:
 
         self.players.clear()
 
+    def is_valid(self):
+        return self.control_id_factory.is_valid()
+
 
 class PlayerSummary:
     def __init__(self, nr, cif):
@@ -45,7 +48,10 @@ class PlayerSummary:
         self.CID_PLAYER = cif.create("player_summary", self.nr)
 
     def update(self, player):
-        if self.cif.is_valid() == False:
+        assert isinstance(self.cif, ControlIdFactory)
+
+        valid, _ = self.cif.is_valid()
+        if not valid:
             return
 
         assert isinstance(self.CID_NAME, ControlId)
