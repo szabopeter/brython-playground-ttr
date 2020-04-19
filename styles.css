@@ -22,6 +22,43 @@ BODY {
 
 #players {
     text-align: center;
+    vertical-align: top;
+}
+
+#players.with_summary {
+    width: 80%;
+}
+
+.menu_button {
+    cursor: pointer;
+    background-color: white;
+    color: dimgrey;
+    border: 1px solid grey;
+}
+
+.player_summary_title {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px;
+    width: 7em;
+}
+
+.player_summary {
+    white-space: nowrap;
+    padding: 4px;
+    border: 1px solid white;
+}
+
+.player_summary_name {
+    display: inline-block;
+    width: 10em;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.player_summary_score {
+    display: inline-block;
+    width: 2em;
 }
 
 .player_section {
@@ -196,13 +233,9 @@ BODY {
 .main_menu LI {
     display: inline-block;
     width: 12em;
-    border: 1px solid grey;
-    background-color: white;
     border-radius: 7px;
     padding: 7px;
     margin: 5px;
-    cursor: pointer;
-    color: dimgrey;
 }
 
 .menu_confirmation {

@@ -2,11 +2,11 @@ import browser
 from browser.template import Template
 
 from brythonfunctions import BrythonFunctions
-
+from gameconfig import game_config
+from player import Player
 from playercontrol import PlayerControl
 from playerlist import PlayerList
-from player import Player
-from gameconfig import game_config
+from gamesummary import GameSummary
 
 
 def log(msg):
@@ -20,10 +20,13 @@ def log_event(msg, event, element):
 
 brython_functions = BrythonFunctions()
 
-def create_players(player_count):
-    return [Player(i, PlayerControl(i, game_config)) for i in range(player_count)]
+def create_players(player_count, summary):
+    return [Player(i, PlayerControl(i, game_config), summary) for i in range(player_count)]
 
-players = PlayerList(create_players(game_config.max_players))
+
+# TODO: decrease coupling between PlayerList & Player & PlayerControl
+game_summary = GameSummary(brython_functions)
+# players = PlayerList(create_players(game_config.max_players, game_summary))
 
 
 def get_divnr(event):
@@ -171,66 +174,69 @@ def confirm_load_from_browser(event):
     load_from_local_storage()
 
 
+@browser.doc["summary_collapsed"].bind("click")
+def show_summary(event):
+    brython_functions.show("summary_expanded")
+    brython_functions.hide("summary_collapsed")
+    brython_functions.add_class("players", "with_summary")
+    brython_functions.remove_class("players", "without_summary")
+
+
+@browser.doc["summary_collapse"].bind("click")
+def hide_summary(event):
+    brython_functions.show("summary_collapsed")
+    brython_functions.hide("summary_expanded")
+    brython_functions.remove_class("players", "with_summary")
+    brython_functions.add_class("players", "without_summary")
+
+
 def load_from_local_storage():
-    log("Loading...")
+    def player_from_serializeable(serializeable, control_nr):
+        control = PlayerControl(control_nr, game_config)
+        return Player.from_serializeable(serializeable, control, game_summary)
 
     from browser.local_storage import storage
     import json
-
-    json_dump = storage['playerlist']
-    log("Json:")
-    log(json_dump)
-
-    ser = json.loads(json_dump)
-    log("Serializeable")
-    log(str(ser))
-
     global players
 
-    def player_from_serializeable(serializeable, control_nr):
-        control = PlayerControl(control_nr, game_config)
-        return Player.from_serializeable(serializeable, control)
-    players = PlayerList.from_serializeable(ser, player_from_serializeable)
+    game_summary.clear()
 
+    json_dump = storage['playerlist']
+    ser = json.loads(json_dump)
+    players = PlayerList.from_serializeable(ser, player_from_serializeable)
     players.update_all()
 
 
 def save_to_local_storage():
-    log("Saving...")
     from browser.local_storage import storage
     import json
-    ser = players.serializeable()
-    log("Serializeable:")
-    log(str(ser))
-    json_dump = json.dumps(ser)
-    log("Json:")
-    log(json_dump)
-    storage['playerlist'] = json_dump
-    log("Saved...")
 
-    # local storage example
-    # from browser.local_storage import storage
-    # try:
-    #     storage['tasklist']
-    # except:
-    #     storage['tasklist'] = json.dumps({})
-    #
-    # self.tasks = json.loads(storage['tasklist'])
-    # storage['tasklist'] = json.dumps(self.tasks)
+    ser = players.serializeable()
+    json_dump = json.dumps(ser)
+    storage['playerlist'] = json_dump
 
 
 def set_players(player_count):
     # log('Selected: %s' % player_count)
     global players
-    players = PlayerList(create_players(player_count))
+    players = PlayerList(create_players(player_count, game_summary))
     events = [increase, decrease, additional_points_change,
               longest_road_length_change, minimize, restore, player_name_change]
-    Template(browser.doc['players'], events).render(
+    Template(browser.doc["players"], events).render(
         players=players, 
         train_lengths=game_config.train_lengths
         )
 
+    Template(browser.doc["players_summary"], []).render(
+        players=players
+    )
+
     valid, message = players.is_valid()
+    if not valid:
+        log(message)
+        return
+
+    valid, message = game_summary.is_valid()
     if not valid:
         log(message)
         return
@@ -238,7 +244,9 @@ def set_players(player_count):
     for player in players:
         player.update_all()
 
-    brython_functions.show('players')
+    brython_functions.show("players", "inline-block")
+    brython_functions.show("summary", "inline-block")
+    hide_summary(None)
 
 
 url = browser.doc.location.toString()

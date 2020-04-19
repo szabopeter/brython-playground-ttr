@@ -25,7 +25,7 @@
 
 <div id="main_menu" style="display: none">
     <ul class="main_menu">
-        <li id="save_to_browser">
+        <li id="save_to_browser" class="menu_button">
             Save to browser...
             <span class="menu_confirmation" id="confirm_save_to_browser" style="display: none;">
                 save!
@@ -34,19 +34,19 @@
                 ✅
             </span>
         </li>
-        <li id="load_from_browser">
+        <li id="load_from_browser" class="menu_button">
             Load from browser...
             <span class="menu_confirmation" id="confirm_load_from_browser" style="display: none;">
                 load!
             </span>
         </li>
-        <li id="restart">
+        <li id="restart" class="menu_button">
             Restart...
             <span class="menu_confirmation" id="confirm_restart" style="display: none">
                 confirm!
             </span>
         </li>
-        <li id="finish">
+        <li id="finish" class="menu_button">
             Sort by score...
             <span class="menu_confirmation" id="confirm_finish" style="display: none">
                 confirm!
@@ -55,7 +55,22 @@
     </ul>
 </div>
 
-<div id="players" style="display: none">
+<div id="summary" style="display:none;">
+    <div id="summary_collapsed" class="player_summary_title menu_button">
+        Standings
+    </div>
+    <div id="summary_expanded">
+        <div id="summary_collapse" class="minimize_button player_summary_title menu_button">Standings ❌</div>
+        <div id="players_summary">
+            <div id="player_summary{nr}" class="player_summary" b-code="for nr, player in enumerate(players)">
+                <span id="player_summary_name{nr}" class="player_summary_name"></span>
+                <span id="player_summary_score{nr}" class="player_summary_score"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="players" style="display: none;">
     <div id="player_section{player}" class="player_section player_color_{playerobj.color()}" b-code="for player, playerobj in enumerate(players):">
         <div id="player_view_minimized{player}" class="player_view_minimized" data-divnr="{player}_0" b-on="click:restore">
             {player}

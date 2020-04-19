@@ -82,9 +82,9 @@ class PlayerControl:
             if class_name != to_add:
                 class_list.remove(class_name)
 
-    def mark_with_class(self, controlId, to_add, *to_remove):
+    def mark_with_class(self, control_id, to_add, *to_remove):
         # print("Marking %s with %s instead of %s" % (prefix, to_add, to_remove))
-        self.mark_control_with_class(controlId.get().classList, to_add, to_remove)
+        self.mark_control_with_class(control_id.get().classList, to_add, to_remove)
 
     def mark_additional_points_valid(self):
         self.mark_with_class(self.CID_ADDITIONAL_POINTS, "valid", "invalid")
